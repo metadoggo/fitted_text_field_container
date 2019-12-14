@@ -4,7 +4,7 @@ import 'utils.dart';
 
 class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// Creates an animated container to wrap a [child] `TextField`  and automatically resizes to fit the [child]'s text value
-  /// 
+  ///
   /// ```dart
   /// AnimatedFittedTextFieldContainer(
   ///   child: TextField(...),
@@ -14,7 +14,7 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The `TextField` to wrap - the `controller` must not be `null`.
   final TextField child;
 
-  /// `Duration` for animating gtowth 
+  /// `Duration` for animating gtowth
   final Duration growDuration;
 
   /// `Duration` to use for animating shrinkage

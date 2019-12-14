@@ -2,7 +2,7 @@ name: fitted_text_field_container
 description: A Container that automatically resizes to fit a the text value of a Material TextField.
 homepage: https://github.com/huyffs/fitted_text_field_container
 
-version: 1.0.0
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

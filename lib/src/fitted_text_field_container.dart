@@ -4,7 +4,7 @@ import 'utils.dart';
 
 class FittedTextFieldContainer extends StatefulWidget {
   /// Creates a container to wrap a [child] `TextField`  and automatically resizes to fit the [child]'s text value
-  /// 
+  ///
   /// ```dart
   /// FittedTextFieldContainer(
   ///   child: TextField(...),
@@ -16,7 +16,7 @@ class FittedTextFieldContainer extends StatefulWidget {
 
   const FittedTextFieldContainer({Key key, @required this.child})
       : assert(child != null),
-        super(key: key) ;
+        super(key: key);
   @override
   _FittedTextFieldContainerState createState() =>
       _FittedTextFieldContainerState();
