@@ -1,0 +1,19 @@
+name: fitted_text_field_container
+description: A Container that automatically resizes to fit a the text value of a Material TextField.
+homepage: https://github.com/huyffs/fitted_text_field_container
+
+version: 1.0.0
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
