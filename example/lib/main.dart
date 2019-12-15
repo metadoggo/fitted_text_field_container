@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Fitted Text Field Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -55,6 +59,51 @@ class _MyHomePageState extends State<MyHomePage> {
     _aniDongFocusNode = FocusNode();
     _aniEuroFocusNode = FocusNode();
     _aniWholePoundFocusNode = FocusNode();
+    Timer(Duration(milliseconds: 2000), () {
+      // Uncomment this for automatic text input
+      // runInputer(20);
+    });
+  }
+
+  final Random rand = Random(DateTime.now().millisecondsSinceEpoch);
+  void runInputer(int i) {
+    Timer(Duration(milliseconds: 50 + rand.nextInt(500)), () {
+      setState(() {
+        _plainCtl.text += String.fromCharCode(97 + rand.nextInt(25));
+        String num = rand.nextInt(9).toString();
+        _poundCtl.text += num;
+        _aniDollarCtl.text += num;
+        _aniDongCtl.text += num;
+        _aniEuroCtl.text += num;
+        _aniWholePoundCtl.text += num;
+        if (i > 0) {
+          runInputer(i - 1);
+        } else {
+          runDelete(10, 2000);
+        }
+      });
+    });
+  }
+
+  void runDelete(int end, int delay) {
+    Timer(Duration(milliseconds: delay), () {
+      setState(() {
+        _plainCtl.text = _plainCtl.text.substring(0, end);
+        _poundCtl.text = _poundCtl.text.substring(0, end);
+        _aniDollarCtl.text = _aniDollarCtl.text.substring(0, end);
+        _aniDongCtl.text = _aniDongCtl.text.substring(0, end);
+        _aniEuroCtl.text = _aniEuroCtl.text.substring(0, end);
+        _aniWholePoundCtl.text = _aniWholePoundCtl.text.substring(0, end);
+        if (_plainCtl.text.length > 0) {
+          runDelete(_plainCtl.text.length - 1,
+              ((600 / 10) * end).round() + rand.nextInt(300) + 300);
+        } else {
+          Timer(Duration(milliseconds: 2000), () {
+            runInputer(20);
+          });
+        }
+      });
+    });
   }
 
   @override
@@ -73,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Fit(
             child: TextField(
               controller: _plainCtl,
-              style: TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: 36),
               focusNode: _plainFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.text,
@@ -89,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Fit(
             child: TextField(
               controller: _poundCtl,
-              style: TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: 36),
               focusNode: _poundFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -113,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AnimFit(
             child: TextField(
               controller: _aniDollarCtl,
-              style: TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: 36),
               focusNode: _aniDollarFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -133,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AnimFit(
             child: TextField(
               controller: _aniEuroCtl,
-              style: TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: 36),
               focusNode: _aniEuroFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -152,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AnimFit(
             child: TextField(
               controller: _aniDongCtl,
-              style: TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: 36),
               focusNode: _aniDongFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
@@ -172,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AnimFit(
             child: TextField(
               controller: _aniWholePoundCtl,
-              style: TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: 36),
               focusNode: _aniWholePoundFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,

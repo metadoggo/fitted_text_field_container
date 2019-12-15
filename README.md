@@ -2,6 +2,8 @@
 
 A `Container` that automatically resizes it's width to fit the containing `TextField`'s text value.
 
+Read the short blog: https://medium.com/@huyffs/fitted-textfield-container-for-flutter-c9c63644441c
+
 ## Usage
 
 ### FittedTextFieldContainer
@@ -10,15 +12,13 @@ A `Container` that automatically resizes it's width to fit the containing `TextF
 |--|--|--|
 |Param|Default|Description|
 |`child`||The `TextField` to contain|
-|  |  |  |
 
 #### Example
 
 ```dart
 FittedTextFieldContainer(
     child: TextField(
-        style: TextStyle(fontSize: 48),
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        controller: someTextEditingController,
         textAlign: TextAlign.right,
         decoration: InputDecoration(
             prefixText: "£",
@@ -39,7 +39,6 @@ Here I've used `hintText: "0"` to keep the textfield from becoming very narrow w
 |`growCurve`|`Curves.easeOutCirc`|The curve to use in the grow animation|
 |`shrinkCurve`|`Curves.easeInCirc`|The curve to use in the shrink animation|
 |`child`||The `TextField` to contain|
-|  |  |  |
 
 #### Example
 
@@ -50,8 +49,7 @@ AnimatedFittedTextFieldContainer(
     growCurve: Curves.easeOutCirc,
     shrinkCurve: Curves.easeInCirc,
     child: TextField(
-        style: TextStyle(fontSize: 48),
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        controller: someTextEditingController,
         textAlign: TextAlign.right,
         decoration: InputDecoration(
             prefixText: "£",

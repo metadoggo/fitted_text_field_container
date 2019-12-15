@@ -19,9 +19,7 @@ $ flutter run
 The unanimated version uses `Container`
 ```dart
 FittedTextFieldContainer(
-    textField: TextField(
-        style: TextStyle(fontSize: 48),
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
+    child: TextField(
         textAlign: TextAlign.right,
         decoration: InputDecoration(
             prefixText: "£",
@@ -39,9 +37,7 @@ AnimatedFittedTextFieldContainer(
     shrinkDuration: Duration(milliseconds: 600),
     growCurve: Curves.easeOutCirc,
     shrinkCurve: Curves.easeInCirc,
-    textField: TextField(
-        style: TextStyle(fontSize: 48),
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
+    child: TextField(
         textAlign: TextAlign.right,
         decoration: InputDecoration(
             prefixText: "£",
