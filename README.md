@@ -8,10 +8,13 @@ Read the short blog: https://medium.com/@huyffs/fitted-textfield-container-for-f
 
 ### FittedTextFieldContainer
 
-|  |  |  |
-|--|--|--|
-|Param|Default|Description|
-|`child`||The `TextField` to contain|
+| Param             | Type        | Default      | Description                                                                                                    |
+|-------------------|-------------|--------------|----------------------------------------------------------------------------------------------------------------|
+| `child`           | `TextField` | * _required_ | The `TextField` to fit                                                                                         |
+| `prefixIconWidth` | `double`    | `48`         | Width of the `prefxiIcon` (if used)                                                                            |
+| `suffixIconWidth` | `double`    | `48`         | Width of the `suffxiIcon` (if used)                                                                            |
+| `prefixIconWidth` | `double`    | `null`       | Minimum width - `null` means there is no hard minimum width - it will depend on the `labelText` and `hintText` |
+| `prefixIconWidth` | `double`    | `null`       | Maximum width - `null` means the maximum width is only contrained by the parent widget                         |
 
 #### Example
 
@@ -22,23 +25,25 @@ FittedTextFieldContainer(
         textAlign: TextAlign.right,
         decoration: InputDecoration(
             prefixText: "£",
-            hintText: "0",
+            labelText: "Amount",
         ),
     ),
 )
 ```
 
-Here I've used `hintText: "0"` to keep the textfield from becoming very narrow when the `TextField` is empty.
-
 ### AnimatedFittedTextFieldContainer
-|  |  |  |
-|--|--|--|
-|Param|Default|Description|
-|`growDuration`|`Duration(milliseconds: 300)`|Duration to animate the container's width when text is longer|
-|`shrinkDuration`|`Duration(milliseconds: 600)`|Duration to animate the container's width when text is shorter|
-|`growCurve`|`Curves.easeOutCirc`|The curve to use in the grow animation|
-|`shrinkCurve`|`Curves.easeInCirc`|The curve to use in the shrink animation|
-|`child`||The `TextField` to contain|
+| Param             | Type        | Default                       | Description                                                                                                    |
+|-------------------|-------------|-------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `child`           | `TextField` |  * _required_                 | The `TextField` to fit                                                                                         |
+| `growDuration`    | `Duration`  | `Duration(milliseconds: 300)` | Duration to animate the container's width when `TextField` grows                                               |
+| `shrinkDuration`  | `Duration`  | `Duration(milliseconds: 600)` | Duration to animate the container's width when `TextField` shrinks                                             |
+| `growCurve`       | `Curve`     | `Curves.easeOutCirc`          | The curve to use in the grow animation                                                                         |
+| `shrinkCurve`     | `Curve`     | `Curves.easeInCirc`           | The curve to use in the shrink animation                                                                       |
+| `prefixIconWidth` | `double`    | `48`                          | Width of the `prefixIcon` (if used)                                                                            |
+| `suffixIconWidth` | `double`    | `48`                          | Width of the `suffixIcon` (if used)                                                                            |
+| `prefixIconWidth` | `double`    | `null`                        | Minimum width - `null` means there is no hard minimum width - it will depend on the `labelText` and `hintText` |
+| `prefixIconWidth` | `double`    | `null`                        | Maximum width - `null` means the maximum width is only contrained by the parent widget                         |
+
 
 #### Example
 
@@ -53,13 +58,11 @@ AnimatedFittedTextFieldContainer(
         textAlign: TextAlign.right,
         decoration: InputDecoration(
             prefixText: "£",
-            hintText: "0",
+            labelText: "Amount",
         ),
     ),
 )
 ```
-
-Again, `hintText: "0"` helps to keep the textfield from becoming very narrow when the `TextField` is empty.
 
 ## Contribute
 

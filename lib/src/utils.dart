@@ -25,25 +25,33 @@ double _getTextWidth({
   return painter.width;
 }
 
-/// Returns the width of the textfield's `text` + `prefixText` + `suffixText`
-double calculateMaterialTextfieldWidth(TextField tf) {
-  final double prefixWidth = _getTextWidth(
-    text: tf.decoration.prefixText,
-    style: tf.decoration.prefixStyle ?? tf.style,
-  );
-  final double suffixWidth = _getTextWidth(
-    text: tf.decoration.suffixText,
-    style: tf.decoration.suffixStyle ?? tf.style,
-  );
+/// Returns the width of the textfield's `text` with prefix and suffix included
+double calculateMaterialTextfieldWidth(
+  TextField tf, {
+  double prefixIconWidth,
+  double suffixIconWidth,
+}) {
   // Magic number 3 that somehow prevents scrolling in the input field
-  double width = prefixWidth + suffixWidth + 3;
-  if (tf.controller.text.isEmpty) {
+  double width = 3;
+  if (tf.decoration.prefixText != null) {
     width += _getTextWidth(
-      text: tf.decoration.hintText,
-      style: tf.decoration.hintStyle ?? tf.style,
+      text: tf.decoration.prefixText,
+      style: tf.decoration.prefixStyle ?? tf.style,
     );
-  } else {
+  } else if (tf.decoration.prefixIcon != null && prefixIconWidth != null) {
+    width += prefixIconWidth;
+  }
+  if (tf.decoration.suffixText != null) {
     width += _getTextWidth(
+      text: tf.decoration.suffixText,
+      style: tf.decoration.suffixStyle ?? tf.style,
+    );
+  } else if (tf.decoration.suffixIcon != null && suffixIconWidth != null) {
+    width += suffixIconWidth;
+  }
+  double textWidth = 0;
+  if (tf.controller.text.isNotEmpty) {
+    textWidth = _getTextWidth(
       text: tf.controller.text,
       style: tf.style,
       textAlign: tf.textAlign ?? TextAlign.start,
@@ -51,5 +59,24 @@ double calculateMaterialTextfieldWidth(TextField tf) {
       textDirection: tf.textDirection ?? TextDirection.ltr,
     );
   }
-  return width;
+  if (tf.decoration.labelText != null && tf.decoration.labelText.isNotEmpty) {
+    final labelWidth = _getTextWidth(
+      text: tf.decoration.labelText,
+      style: tf.decoration.labelStyle ?? tf.style,
+    );
+    if (labelWidth > textWidth) {
+      textWidth = labelWidth;
+    }
+  }
+  if (tf.decoration.hintText != null && tf.decoration.hintText.isNotEmpty) {
+    final hintWidth = _getTextWidth(
+      text: tf.decoration.hintText,
+      style: tf.decoration.hintStyle ?? tf.style,
+    );
+    if (hintWidth > textWidth) {
+      textWidth = hintWidth;
+    }
+  }
+
+  return width + textWidth;
 }
