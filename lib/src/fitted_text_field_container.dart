@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'utils.dart';
@@ -41,15 +43,42 @@ class FittedTextFieldContainer extends StatefulWidget {
 }
 
 class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
+  double _prefixWidth;
+  double _suffixWidth;
+  double _hintWidth;
+  double _labelWidth;
+  double _fixedWidth;
   double _textFieldWidth;
 
   @override
   void initState() {
     assert(widget.child.controller != null);
-    _textFieldWidth = _geTextFieldWidth();
     widget.child.controller.addListener(_onTextChanged);
     super.initState();
   }
+
+  @override
+  void didChangeDependencies() {
+    _prefixWidth = widget.child.prefixTextWidth;
+    _suffixWidth = widget.child.suffixTextWidth;
+    _hintWidth = widget.child.hintTextWidth;
+    _labelWidth = widget.child.labelTextWidth;
+    _fixedWidth = _prefixWidth + _suffixWidth;
+
+    if (widget.child.decoration.prefixIcon != null) {
+      _fixedWidth += widget.prefixIconWidth;
+    }
+    if (widget.child.decoration.suffixIcon != null) {
+      _fixedWidth += widget.suffixIconWidth;
+    }
+
+    _fixedWidth += 3; // 3 is a magic number that makes it work
+
+    _textFieldWidth = _geTextFieldWidth();
+    
+    super.didChangeDependencies();
+  }
+
 
   @override
   void dispose() {
@@ -58,9 +87,18 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   }
 
   double _geTextFieldWidth() {
-    double width = calculateMaterialTextfieldWidth(widget.child,
-        prefixIconWidth: widget.prefixIconWidth,
-        suffixIconWidth: widget.suffixIconWidth);
+    double textWidth = widget.child.textWidth;
+
+
+    double width = max(max(textWidth, _hintWidth), _labelWidth) + _fixedWidth;
+
+    if (widget.child.decoration.prefixIcon != null) {
+      width += widget.prefixIconWidth;
+    }
+    if (widget.child.decoration.suffixIcon != null) {
+      width += widget.suffixIconWidth;
+    }
+
     if (widget.minWidth != null && width < widget.minWidth) {
       width = widget.minWidth;
     }

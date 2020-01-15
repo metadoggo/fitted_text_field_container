@@ -1,82 +1,29 @@
 import 'package:flutter/material.dart';
 
-/// Calculates the text's width with the [style], [textAlign], [strutStyle] and [textDirection] properties applied
-double _getTextWidth({
-  final String text,
-  final TextStyle style,
-  final TextAlign textAlign = TextAlign.start,
-  final StrutStyle strutStyle,
-  final TextDirection textDirection = TextDirection.ltr,
-}) {
-  if (text == null || text.isEmpty) {
-    return 0;
-  }
-  final TextSpan span = TextSpan(
-    style: style,
-    text: text,
-  );
-  final TextPainter painter = TextPainter(
-    text: span,
-    textAlign: textAlign,
-    strutStyle: strutStyle,
-    textDirection: textDirection,
-  );
-  painter.layout();
-  return painter.width;
-}
-
-/// Returns the width of the textfield's `text` with prefix and suffix included
-double calculateMaterialTextfieldWidth(
-  TextField tf, {
-  double prefixIconWidth,
-  double suffixIconWidth,
-}) {
-  // Magic number 3 that somehow prevents scrolling in the input field
-  double width = 3;
-  if (tf.decoration.prefixText != null) {
-    width += _getTextWidth(
-      text: tf.decoration.prefixText,
-      style: tf.decoration.prefixStyle ?? tf.style,
-    );
-  } else if (tf.decoration.prefixIcon != null && prefixIconWidth != null) {
-    width += prefixIconWidth;
-  }
-  if (tf.decoration.suffixText != null) {
-    width += _getTextWidth(
-      text: tf.decoration.suffixText,
-      style: tf.decoration.suffixStyle ?? tf.style,
-    );
-  } else if (tf.decoration.suffixIcon != null && suffixIconWidth != null) {
-    width += suffixIconWidth;
-  }
-  double textWidth = 0;
-  if (tf.controller.text.isNotEmpty) {
-    textWidth = _getTextWidth(
-      text: tf.controller.text,
-      style: tf.style,
-      textAlign: tf.textAlign ?? TextAlign.start,
-      strutStyle: tf.strutStyle,
-      textDirection: tf.textDirection ?? TextDirection.ltr,
-    );
-  }
-  if (tf.decoration.labelText != null && tf.decoration.labelText.isNotEmpty) {
-    final labelWidth = _getTextWidth(
-      text: tf.decoration.labelText,
-      style: tf.decoration.labelStyle ?? tf.style,
-    );
-    if (labelWidth > textWidth) {
-      textWidth = labelWidth;
+extension MeasurableTextField on TextField {
+  double _calculateWidth(String text, TextStyle style) {
+    if (text == null || text.isEmpty) {
+      return 0;
     }
-  }
-  if (tf.decoration.hintText != null && tf.decoration.hintText.isNotEmpty) {
-    final hintWidth = _getTextWidth(
-      text: tf.decoration.hintText,
-      style: tf.decoration.hintStyle ?? tf.style,
-    );
-    if (hintWidth > textWidth) {
-      textWidth = hintWidth;
-    }
+    final TextPainter painter = TextPainter(
+      text: TextSpan(
+        style: style ?? this.style,
+        text: text,
+      ),
+      // textAlign: textAlign,
+      // strutStyle: strutStyle,
+      textDirection: textDirection ?? TextDirection.ltr,
+    )..layout();
+    return painter.width;
   }
 
-  return width + textWidth;
+  double get prefixTextWidth =>
+      _calculateWidth(this.decoration.prefixText, this.decoration.prefixStyle);
+  double get suffixTextWidth =>
+      _calculateWidth(this.decoration.suffixText, this.decoration.suffixStyle);
+  double get hintTextWidth =>
+      _calculateWidth(this.decoration.hintText, this.decoration.hintStyle);
+  double get labelTextWidth =>
+      _calculateWidth(this.decoration.labelText, this.decoration.labelStyle);
+  double get textWidth => _calculateWidth(this.controller.text, this.style);
 }
