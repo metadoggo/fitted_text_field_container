@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 extension MeasurableTextField on TextField {
-  double _calculateWidth(String text, TextStyle style) {
+  Size _calculateWidth(String text, TextStyle style) {
     if (text == null || text.isEmpty) {
-      return 0;
+      return Size(0, 0);
     }
     final TextPainter painter = TextPainter(
       text: TextSpan(
@@ -14,16 +14,16 @@ extension MeasurableTextField on TextField {
       // strutStyle: strutStyle,
       textDirection: textDirection ?? TextDirection.ltr,
     )..layout();
-    return painter.width;
+    return Size(painter.width, painter.height);
   }
 
-  double get prefixTextWidth =>
+  Size get prefixTextWidth =>
       _calculateWidth(this.decoration.prefixText, this.decoration.prefixStyle);
-  double get suffixTextWidth =>
+  Size get suffixTextWidth =>
       _calculateWidth(this.decoration.suffixText, this.decoration.suffixStyle);
-  double get hintTextWidth =>
+  Size get hintTextWidth =>
       _calculateWidth(this.decoration.hintText, this.decoration.hintStyle);
-  double get labelTextWidth =>
+  Size get labelTextWidth =>
       _calculateWidth(this.decoration.labelText, this.decoration.labelStyle);
-  double get textWidth => _calculateWidth(this.controller.text, this.style);
+  Size get textWidth => _calculateWidth(this.controller.text, this.style);
 }

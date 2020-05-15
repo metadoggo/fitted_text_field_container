@@ -59,10 +59,10 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   @override
   void didChangeDependencies() {
-    _prefixWidth = widget.child.prefixTextWidth;
-    _suffixWidth = widget.child.suffixTextWidth;
-    _hintWidth = widget.child.hintTextWidth;
-    _labelWidth = widget.child.labelTextWidth;
+    _prefixWidth = widget.child.prefixTextWidth.width;
+    _suffixWidth = widget.child.suffixTextWidth.width;
+    _hintWidth = widget.child.hintTextWidth.width;
+    _labelWidth = widget.child.labelTextWidth.width;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
     if (widget.child.decoration.prefixIcon != null) {
@@ -87,7 +87,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   }
 
   double _geTextFieldWidth() {
-    double textWidth = widget.child.textWidth;
+    double textWidth = widget.child.textWidth.width;
 
 
     double width = max(max(textWidth, _hintWidth), _labelWidth) + _fixedWidth;

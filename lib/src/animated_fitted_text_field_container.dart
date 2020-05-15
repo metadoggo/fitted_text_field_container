@@ -40,6 +40,9 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The maximum width, if not set, the minimum width is infinity - i.e. there is no maximum
   final double maxWidth;
 
+  /// Show a button that clears the content of the text field. This is can make the text field more balanced
+  final bool showClearButton;
+
   const AnimatedFittedTextFieldContainer({
     Key key,
     this.child,
@@ -51,6 +54,7 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
     this.suffixIconWidth = 48,
     this.minWidth,
     this.maxWidth,
+    this.showClearButton = false,
   }) : super(key: key);
   @override
   _AnimatedFittedTextFieldContainerState createState() =>
@@ -79,10 +83,10 @@ class _AnimatedFittedTextFieldContainerState
 
   @override
   void didChangeDependencies() {
-    _prefixWidth = widget.child.prefixTextWidth;
-    _suffixWidth = widget.child.suffixTextWidth;
-    _hintWidth = widget.child.hintTextWidth;
-    _labelWidth = widget.child.labelTextWidth;
+    _prefixWidth = widget.child.prefixTextWidth.width;
+    _suffixWidth = widget.child.suffixTextWidth.width;
+    _hintWidth = widget.child.hintTextWidth.width;
+    _labelWidth = widget.child.labelTextWidth.width;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
     if (widget.child.decoration.prefixIcon != null) {
@@ -95,7 +99,7 @@ class _AnimatedFittedTextFieldContainerState
     _fixedWidth += 3; // 3 is a magic number that makes it work
 
     _textFieldWidth = _geTextFieldWidth();
-    
+
     super.didChangeDependencies();
   }
 
@@ -106,7 +110,7 @@ class _AnimatedFittedTextFieldContainerState
   }
 
   double _geTextFieldWidth() {
-    double textWidth = widget.child.textWidth;
+    double textWidth = widget.child.textWidth.width;
 
     double width = max(max(textWidth, _hintWidth), _labelWidth) + _fixedWidth;
 
@@ -135,13 +139,35 @@ class _AnimatedFittedTextFieldContainerState
     }
   }
 
+  void _onClearPressed() => setState(() {
+        widget.child.controller.clear();
+        widget.child.controller.notifyListeners();
+      });
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: _duration,
       curve: _curve,
       width: _textFieldWidth,
-      child: widget.child,
+      child: widget.showClearButton
+          ? Stack(
+            overflow: Overflow.visible,
+              children: <Widget>[
+                widget.child,
+                Positioned(
+                  top: 10,
+                  right: -15,
+                  child: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: widget.child.controller.text.isEmpty
+                        ? null
+                        : _onClearPressed,
+                  ),
+                ),
+              ],
+            )
+          : widget.child,
     );
   }
 }
