@@ -11,10 +11,10 @@ Read the short blog: https://medium.com/@huyffs/fitted-textfield-container-for-f
 | Param             | Type        | Default      | Description                                                                                                    |
 |-------------------|-------------|--------------|----------------------------------------------------------------------------------------------------------------|
 | `child`           | `TextField` | * _required_ | The `TextField` to fit                                                                                         |
-| `prefixIconWidth` | `double`    | `48`         | Width of the `prefxiIcon` (if used)                                                                            |
-| `suffixIconWidth` | `double`    | `48`         | Width of the `suffxiIcon` (if used)                                                                            |
-| `prefixIconWidth` | `double`    | `null`       | Minimum width - `null` means there is no hard minimum width - it will depend on the `labelText` and `hintText` |
-| `prefixIconWidth` | `double`    | `null`       | Maximum width - `null` means the maximum width is only contrained by the parent widget                         |
+| `prefixIconWidth` | `double`    | `48`         | Width of the `prefixIcon` (if used)                                                                            |
+| `suffixIconWidth` | `double`    | `48`         | Width of the `suffixIcon` (if used)                                                                            |
+| `minWidth`        | `double`    | `null`       | Minimum width - `null` means there is no hard minimum width - it will depend on the `labelText` and `hintText` |
+| `maxWidth`        | `double`    | `null`       | Maximum width - `null` means the maximum width is only constrained by the parent widget                        |
 
 #### Example
 
@@ -41,8 +41,8 @@ FittedTextFieldContainer(
 | `shrinkCurve`     | `Curve`     | `Curves.easeInCirc`           | The curve to use in the shrink animation                                                                       |
 | `prefixIconWidth` | `double`    | `48`                          | Width of the `prefixIcon` (if used)                                                                            |
 | `suffixIconWidth` | `double`    | `48`                          | Width of the `suffixIcon` (if used)                                                                            |
-| `prefixIconWidth` | `double`    | `null`                        | Minimum width - `null` means there is no hard minimum width - it will depend on the `labelText` and `hintText` |
-| `prefixIconWidth` | `double`    | `null`                        | Maximum width - `null` means the maximum width is only contrained by the parent widget                         |
+| `minWidth`        | `double`    | `null`                        | Minimum width - `null` means there is no hard minimum width - it will depend on the `labelText` and `hintText` |
+| `maxWidth`        | `double`    | `null`                        | Maximum width - `null` means the maximum width is only constrained by the parent widget                        |
 
 
 #### Example
