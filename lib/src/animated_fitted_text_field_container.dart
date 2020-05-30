@@ -83,10 +83,10 @@ class _AnimatedFittedTextFieldContainerState
 
   @override
   void didChangeDependencies() {
-    _prefixWidth = widget.child.getPrefixTextSize(_defaultTextStyle).width;
-    _suffixWidth = widget.child.getSuffixTextSize(_defaultTextStyle).width;
-    _hintWidth = widget.child.getHintTextSize(_defaultTextStyle).width;
-    _labelWidth = widget.child.getLabelTextSize(_defaultTextStyle).width;
+    _prefixWidth = getPrefixTextSize(widget.child, _defaultTextStyle).width;
+    _suffixWidth = getSuffixTextSize(widget.child, _defaultTextStyle).width;
+    _hintWidth = getHintTextSize(widget.child, _defaultTextStyle).width;
+    _labelWidth = getLabelTextSize(widget.child, _defaultTextStyle).width;
     _fixedWidth = _prefixWidth + _suffixWidth;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
@@ -117,7 +117,7 @@ class _AnimatedFittedTextFieldContainerState
   }
 
   double _geTextFieldWidth() {
-    double textWidth = widget.child.getTextSize(_defaultTextStyle).width;
+    double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
     double width = textWidth > _hintWidth ? textWidth : _hintWidth;
     if (_labelWidth > width) {
       width = _labelWidth;

@@ -49,7 +49,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   double _labelWidth;
   double _fixedWidth;
   double _textFieldWidth;
-  TextStyle _textStyle;
+  TextStyle _defaultTextStyle;
 
   @override
   void initState() {
@@ -60,10 +60,10 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   @override
   void didChangeDependencies() {
-    _prefixWidth = widget.child.getPrefixTextSize(_textStyle).width;
-    _suffixWidth = widget.child.getSuffixTextSize(_textStyle).width;
-    _hintWidth = widget.child.getHintTextSize(_textStyle).width;
-    _labelWidth = widget.child.getLabelTextSize(_textStyle).width;
+    _prefixWidth = getPrefixTextSize(widget.child, _defaultTextStyle).width;
+    _suffixWidth = getSuffixTextSize(widget.child, _defaultTextStyle).width;
+    _hintWidth = getHintTextSize(widget.child, _defaultTextStyle).width;
+    _labelWidth = getLabelTextSize(widget.child, _defaultTextStyle).width;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
     if (widget.child.decoration.prefixIcon != null) {
@@ -79,7 +79,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
     // When style is null, it defaults to `subtitle1` of current field.
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    _textStyle = widget.child.style ?? Theme.of(context).textTheme.subtitle1;
+    _defaultTextStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
     _textFieldWidth = _geTextFieldWidth();
 
     super.didChangeDependencies();
@@ -92,7 +92,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   }
 
   double _geTextFieldWidth() {
-    double textWidth = widget.child.getTextSize(_textStyle).width;
+    double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
     double width = textWidth > _hintWidth ? textWidth : _hintWidth;
     if (_labelWidth > width) {
       width = _labelWidth;
