@@ -217,6 +217,10 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
+          Text(
+            'Custom builder example',
+            style: Theme.of(context).textTheme.headline4,
+          ),
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
