@@ -1,3 +1,7 @@
+## 1.2.1
+* Fixed exception thrown when `textDirection` is not set
+* Fixed incorect calculations due to default stules not being available durint initialisation
+
 ## 1.2.0
 * Added `builder` for building complex layouts
 * Fixed calculations to remove the need for a magic number
