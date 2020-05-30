@@ -14,7 +14,7 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The `TextField` to wrap - the `controller` must not be `null`.
   final TextField child;
 
-  /// `Duration` for animating gtowth
+  /// `Duration` for animating growth
   final Duration growDuration;
 
   /// `Duration` to use for animating shrinkage
