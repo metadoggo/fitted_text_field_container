@@ -16,7 +16,7 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The `TextField` to wrap - the `controller` must not be `null`.
   final TextField child;
 
-  /// `Duration` for animating gtowth
+  /// `Duration` for animating growth
   final Duration growDuration;
 
   /// `Duration` to use for animating shrinkage
@@ -34,7 +34,7 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The width of the `TextField.decoration.suffixIcon` if used
   final double suffixIconWidth;
 
-  /// The minimum width, if not set, the minimum width is 0 - i.e. there is no mimimum
+  /// The minimum width, if not set, the minimum width is 0 - i.e. there is no minimum
   final double minWidth;
 
   /// The maximum width, if not set, the minimum width is infinity - i.e. there is no maximum
