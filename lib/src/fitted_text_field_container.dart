@@ -79,7 +79,8 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
     // When style is null, it defaults to `subtitle1` of current field.
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    _defaultTextStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
+    _defaultTextStyle =
+        widget.child.style ?? Theme.of(context).textTheme.subhead;
     _textFieldWidth = _geTextFieldWidth();
 
     super.didChangeDependencies();
