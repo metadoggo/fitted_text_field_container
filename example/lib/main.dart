@@ -116,20 +116,18 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 50),
         children: <Widget>[
           Text(
-            'Unanimated examples',
-            style: Theme.of(context).textTheme.display1,
+            'Static examples',
+            style: Theme.of(context).textTheme.headline4,
           ),
           Fit(
             child: TextField(
               controller: _plainCtl,
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 16),
               focusNode: _plainFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.text,
-              textAlign: TextAlign.right,
-              decoration: InputDecoration(
-                hintText: "Name",
-              ),
+              textAlign: TextAlign.left,
+              maxLines: null,
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_poundFocusNode);
               },
@@ -138,10 +136,11 @@ class _MyHomePageState extends State<MyHomePage> {
           Fit(
             child: TextField(
               controller: _poundCtl,
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 26),
               focusNode: _poundFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
+              maxLines: null,
               inputFormatters: [
                 WhitelistingTextInputFormatter(RegExp(r"\d+\.?\d*")),
               ],
@@ -157,12 +156,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Text(
             'Animated examples',
-            style: Theme.of(context).textTheme.display1,
+            style: Theme.of(context).textTheme.headline4,
           ),
           AnimFit(
             child: TextField(
               controller: _aniDollarCtl,
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 16),
               focusNode: _aniDollarFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -182,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AnimFit(
             child: TextField(
               controller: _aniEuroCtl,
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 26),
               focusNode: _aniEuroFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -201,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
           AnimFit(
             child: TextField(
               controller: _aniDongCtl,
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 26),
               focusNode: _aniDongFocusNode,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
@@ -218,25 +217,50 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
-          AnimFit(
-            child: TextField(
-              controller: _aniWholePoundCtl,
-              style: TextStyle(fontSize: 36),
-              focusNode: _aniWholePoundFocusNode,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp(r"\d+")),
-              ],
-              textAlign: TextAlign.right,
-              decoration: InputDecoration(
-                prefixText: "£",
-                suffixText: ".00",
-                hintText: "0",
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: AnimatedFittedTextFieldContainer(
+                growDuration: Duration(milliseconds: 300),
+                shrinkDuration: Duration(milliseconds: 600),
+                growCurve: Curves.easeOutCirc,
+                shrinkCurve: Curves.easeInCirc,
+                child: TextField(
+                  controller: _aniWholePoundCtl,
+                  style: TextStyle(fontSize: 26),
+                  focusNode: _aniWholePoundFocusNode,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter(RegExp(r"\d+")),
+                  ],
+                  textAlign: TextAlign.right,
+                  decoration: InputDecoration(
+                    prefixText: "£",
+                    suffixText: ".00",
+                    hintText: "0",
+                  ),
+                  onChanged: (value) => setState(() {}),
+                  onSubmitted: (String value) {
+                    FocusScope.of(context).requestFocus(_plainFocusNode);
+                  },
+                ),
+                builder: (context, child) => Container(
+                  child: Stack(
+                    overflow: Overflow.visible,
+                    children: <Widget>[
+                      child,
+                      Positioned(
+                        top: 0,
+                        right: -22,
+                        child: _aniWholePoundCtl.text.isEmpty
+                            ? Icon(Icons.star_border)
+                            : Icon(Icons.star, color: Colors.amber),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              onSubmitted: (String value) {
-                FocusScope.of(context).requestFocus(_plainFocusNode);
-              },
             ),
           ),
         ],
@@ -255,14 +279,14 @@ class Fit extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
-        child: FittedTextFieldContainer(child: child),
+        child: FittedTextFieldContainer(minWidth: 16, child: child),
       ),
     );
   }
 }
 
 class AnimFit extends StatelessWidget {
-  final Widget child;
+  final TextField child;
 
   AnimFit({Key key, this.child}) : super(key: key);
 

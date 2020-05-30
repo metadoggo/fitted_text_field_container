@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'utils.dart';
@@ -34,14 +32,15 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The width of the `TextField.decoration.suffixIcon` if used
   final double suffixIconWidth;
 
-  /// The minimum width, if not set, the minimum width is 0 - i.e. there is no mimimum
+  /// The minimum width, default is 0 - which makes the TextField invisible if the TextField
+  /// doesn't include properties that takes up space (such as labelText, prefixIcon, etc).
   final double minWidth;
 
-  /// The maximum width, if not set, the minimum width is infinity - i.e. there is no maximum
+  /// The maximum width, defaults to `double.infinity` - i.e. there is no maximum
   final double maxWidth;
 
-  /// Show a button that clears the content of the text field. This is can make the text field more balanced
-  final bool showClearButton;
+  /// The builder provides the `child` TextField to a function that returns a widget.
+  final Widget Function(BuildContext context, TextField child) builder;
 
   const AnimatedFittedTextFieldContainer({
     Key key,
@@ -52,9 +51,9 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
     this.shrinkCurve = Curves.easeInCirc,
     this.prefixIconWidth = 48,
     this.suffixIconWidth = 48,
-    this.minWidth,
-    this.maxWidth,
-    this.showClearButton = false,
+    this.minWidth = 0,
+    this.maxWidth = double.infinity,
+    this.builder,
   }) : super(key: key);
   @override
   _AnimatedFittedTextFieldContainerState createState() =>
@@ -71,6 +70,7 @@ class _AnimatedFittedTextFieldContainerState
   double _textFieldWidth;
   Duration _duration;
   Curve _curve;
+  TextStyle _defaultTextStyle;
 
   @override
   void initState() {
@@ -83,10 +83,11 @@ class _AnimatedFittedTextFieldContainerState
 
   @override
   void didChangeDependencies() {
-    _prefixWidth = widget.child.prefixTextWidth.width;
-    _suffixWidth = widget.child.suffixTextWidth.width;
-    _hintWidth = widget.child.hintTextWidth.width;
-    _labelWidth = widget.child.labelTextWidth.width;
+    _prefixWidth = widget.child.getPrefixTextSize(_defaultTextStyle).width;
+    _suffixWidth = widget.child.getSuffixTextSize(_defaultTextStyle).width;
+    _hintWidth = widget.child.getHintTextSize(_defaultTextStyle).width;
+    _labelWidth = widget.child.getLabelTextSize(_defaultTextStyle).width;
+    _fixedWidth = _prefixWidth + _suffixWidth;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
     if (widget.child.decoration.prefixIcon != null) {
@@ -96,8 +97,14 @@ class _AnimatedFittedTextFieldContainerState
       _fixedWidth += widget.suffixIconWidth;
     }
 
-    _fixedWidth += 3; // 3 is a magic number that makes it work
+    // Add enough space for the cursor to prevent it being positined onto the next line
+    // in a multiline textfield and scrolled in a single-line text field.
+    _fixedWidth += widget.child.cursorWidth + 1;
 
+    // When style is null, it defaults to `subtitle1` of current field.
+    // See: https://api.flutter.dev/flutter/material/TextField/style.html
+    _defaultTextStyle =
+        widget.child.style ?? Theme.of(context).textTheme.subtitle1;
     _textFieldWidth = _geTextFieldWidth();
 
     super.didChangeDependencies();
@@ -110,14 +117,17 @@ class _AnimatedFittedTextFieldContainerState
   }
 
   double _geTextFieldWidth() {
-    double textWidth = widget.child.textWidth.width;
+    double textWidth = widget.child.getTextSize(_defaultTextStyle).width;
+    double width = textWidth > _hintWidth ? textWidth : _hintWidth;
+    if (_labelWidth > width) {
+      width = _labelWidth;
+    }
+    width += _fixedWidth;
 
-    double width = max(max(textWidth, _hintWidth), _labelWidth) + _fixedWidth;
-
-    if (widget.minWidth != null && width < widget.minWidth) {
+    if (width < widget.minWidth) {
       width = widget.minWidth;
     }
-    if (widget.maxWidth != null && width > widget.maxWidth) {
+    if (width > widget.maxWidth) {
       width = widget.maxWidth;
     }
     return width;
@@ -136,13 +146,9 @@ class _AnimatedFittedTextFieldContainerState
         }
         _textFieldWidth = width;
       });
+      // widget.child.controller.selection = widget.child.controller.selection.copyWith();
     }
   }
-
-  void _onClearPressed() => setState(() {
-        widget.child.controller.clear();
-        widget.child.controller.notifyListeners();
-      });
 
   @override
   Widget build(BuildContext context) {
@@ -150,24 +156,9 @@ class _AnimatedFittedTextFieldContainerState
       duration: _duration,
       curve: _curve,
       width: _textFieldWidth,
-      child: widget.showClearButton
-          ? Stack(
-            overflow: Overflow.visible,
-              children: <Widget>[
-                widget.child,
-                Positioned(
-                  top: 10,
-                  right: -15,
-                  child: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: widget.child.controller.text.isEmpty
-                        ? null
-                        : _onClearPressed,
-                  ),
-                ),
-              ],
-            )
-          : widget.child,
+      child: widget.builder == null
+          ? widget.child
+          : widget.builder(context, widget.child),
     );
   }
 }

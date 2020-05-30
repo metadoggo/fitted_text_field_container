@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'utils.dart';
@@ -22,10 +20,11 @@ class FittedTextFieldContainer extends StatefulWidget {
   /// The width of the `TextField.decoration.suffixIcon` if used
   final double suffixIconWidth;
 
-  /// The minimum width, if not set, the minimum width is 0 - i.e. there is no mimimum
+  /// The minimum width, default is 0 - which makes the TextField invisible if the TextField
+  /// doesn't include properties that takes up space (such as labelText, prefixIcon, etc).
   final double minWidth;
 
-  /// The maximum width, if not set, the minimum width is infinity - i.e. there is no maximum
+  /// The maximum width, defaults to `double.infinity` - i.e. there is no maximum
   final double maxWidth;
 
   const FittedTextFieldContainer({
@@ -33,10 +32,11 @@ class FittedTextFieldContainer extends StatefulWidget {
     @required this.child,
     this.prefixIconWidth = 48,
     this.suffixIconWidth = 48,
-    this.minWidth,
-    this.maxWidth,
+    this.minWidth = 0,
+    this.maxWidth = double.infinity,
   })  : assert(child != null),
         super(key: key);
+
   @override
   _FittedTextFieldContainerState createState() =>
       _FittedTextFieldContainerState();
@@ -49,6 +49,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   double _labelWidth;
   double _fixedWidth;
   double _textFieldWidth;
+  TextStyle _textStyle;
 
   @override
   void initState() {
@@ -59,10 +60,10 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   @override
   void didChangeDependencies() {
-    _prefixWidth = widget.child.prefixTextWidth.width;
-    _suffixWidth = widget.child.suffixTextWidth.width;
-    _hintWidth = widget.child.hintTextWidth.width;
-    _labelWidth = widget.child.labelTextWidth.width;
+    _prefixWidth = widget.child.getPrefixTextSize(_textStyle).width;
+    _suffixWidth = widget.child.getSuffixTextSize(_textStyle).width;
+    _hintWidth = widget.child.getHintTextSize(_textStyle).width;
+    _labelWidth = widget.child.getLabelTextSize(_textStyle).width;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
     if (widget.child.decoration.prefixIcon != null) {
@@ -72,13 +73,17 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
       _fixedWidth += widget.suffixIconWidth;
     }
 
-    _fixedWidth += 3; // 3 is a magic number that makes it work
+    // Add enough space for the cursor to prevent it being positined onto the next line
+    // in a multiline textfield and scrolled in a single-line text field.
+    _fixedWidth += widget.child.cursorWidth + 1;
 
+    // When style is null, it defaults to `subtitle1` of current field.
+    // See: https://api.flutter.dev/flutter/material/TextField/style.html
+    _textStyle = widget.child.style ?? Theme.of(context).textTheme.subtitle1;
     _textFieldWidth = _geTextFieldWidth();
-    
+
     super.didChangeDependencies();
   }
-
 
   @override
   void dispose() {
@@ -87,10 +92,12 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   }
 
   double _geTextFieldWidth() {
-    double textWidth = widget.child.textWidth.width;
-
-
-    double width = max(max(textWidth, _hintWidth), _labelWidth) + _fixedWidth;
+    double textWidth = widget.child.getTextSize(_textStyle).width;
+    double width = textWidth > _hintWidth ? textWidth : _hintWidth;
+    if (_labelWidth > width) {
+      width = _labelWidth;
+    }
+    width += _fixedWidth;
 
     if (widget.child.decoration.prefixIcon != null) {
       width += widget.prefixIconWidth;
@@ -99,10 +106,10 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
       width += widget.suffixIconWidth;
     }
 
-    if (widget.minWidth != null && width < widget.minWidth) {
+    if (width < widget.minWidth) {
       width = widget.minWidth;
     }
-    if (widget.maxWidth != null && width > widget.maxWidth) {
+    if (width > widget.maxWidth) {
       width = widget.maxWidth;
     }
     return width;

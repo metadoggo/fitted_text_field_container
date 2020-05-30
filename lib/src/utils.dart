@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 
 extension MeasurableTextField on TextField {
-  Size _calculateWidth(String text, TextStyle style) {
+  Size _calculateSize(String text, TextStyle style) {
     if (text == null || text.isEmpty) {
       return Size(0, 0);
     }
-    final TextPainter painter = TextPainter(
+    final painter = TextPainter(
       text: TextSpan(
         style: style ?? this.style,
         text: text,
       ),
-      // textAlign: textAlign,
-      // strutStyle: strutStyle,
+      textAlign: textAlign,
+      strutStyle: strutStyle,
+      maxLines: this.maxLines,
       textDirection: textDirection ?? TextDirection.ltr,
     )..layout();
-    return Size(painter.width, painter.height);
+    return painter.size;
   }
 
-  Size get prefixTextWidth =>
-      _calculateWidth(this.decoration.prefixText, this.decoration.prefixStyle);
-  Size get suffixTextWidth =>
-      _calculateWidth(this.decoration.suffixText, this.decoration.suffixStyle);
-  Size get hintTextWidth =>
-      _calculateWidth(this.decoration.hintText, this.decoration.hintStyle);
-  Size get labelTextWidth =>
-      _calculateWidth(this.decoration.labelText, this.decoration.labelStyle);
-  Size get textWidth => _calculateWidth(this.controller.text, this.style);
+  Size getPrefixTextSize([TextStyle defaultStyle]) => _calculateSize(
+      this.decoration.prefixText, this.decoration.prefixStyle ?? defaultStyle);
+
+  Size getSuffixTextSize([TextStyle defaultStyle]) => _calculateSize(
+      this.decoration.suffixText, this.decoration.suffixStyle ?? defaultStyle);
+
+  Size getHintTextSize([TextStyle defaultStyle]) => _calculateSize(
+      this.decoration.hintText, this.decoration.hintStyle ?? defaultStyle);
+
+  Size getLabelTextSize([TextStyle defaultStyle]) => _calculateSize(
+      this.decoration.labelText, this.decoration.labelStyle ?? defaultStyle);
+
+  Size getTextSize([TextStyle defaultStyle]) =>
+      _calculateSize(this.controller.text, this.style ?? defaultStyle);
 }
