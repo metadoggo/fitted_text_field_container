@@ -83,6 +83,11 @@ class _AnimatedFittedTextFieldContainerState
 
   @override
   void didChangeDependencies() {
+    // When style is null, it defaults to `subtitle1` of current field.
+    // See: https://api.flutter.dev/flutter/material/TextField/style.html
+    _defaultTextStyle =
+        widget.child.style ?? Theme.of(context).textTheme.subhead;
+
     _prefixWidth = getPrefixTextSize(widget.child, _defaultTextStyle).width;
     _suffixWidth = getSuffixTextSize(widget.child, _defaultTextStyle).width;
     _hintWidth = getHintTextSize(widget.child, _defaultTextStyle).width;
@@ -101,10 +106,6 @@ class _AnimatedFittedTextFieldContainerState
     // in a multiline textfield and scrolled in a single-line text field.
     _fixedWidth += widget.child.cursorWidth + 1;
 
-    // When style is null, it defaults to `subtitle1` of current field.
-    // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    _defaultTextStyle =
-        widget.child.style ?? Theme.of(context).textTheme.subhead;
     _textFieldWidth = _geTextFieldWidth();
 
     super.didChangeDependencies();

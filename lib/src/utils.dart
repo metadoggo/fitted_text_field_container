@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 Size _calculateSize({
-  String text,
-  TextStyle style,
-  TextAlign textAlign,
-  StrutStyle strutStyle,
-  int maxLines,
-  TextDirection textDirection = TextDirection.ltr,
+  @required String text,
+  @required TextStyle style,
+  @required TextAlign textAlign,
+  @required StrutStyle strutStyle,
+  @required int maxLines,
+  @required TextDirection textDirection,
 }) {
   if (text == null || text.isEmpty) {
     return Size(0, 0);
@@ -31,7 +31,7 @@ Size getPrefixTextSize(TextField textField, [TextStyle defaultStyle]) =>
       textAlign: textField.textAlign,
       strutStyle: textField.strutStyle,
       maxLines: textField.maxLines,
-      textDirection: textField.textDirection,
+      textDirection: textField.textDirection  ?? TextDirection.ltr,
     );
 
 Size getSuffixTextSize(TextField textField, [TextStyle defaultStyle]) =>
@@ -41,7 +41,7 @@ Size getSuffixTextSize(TextField textField, [TextStyle defaultStyle]) =>
       textAlign: textField.textAlign,
       strutStyle: textField.strutStyle,
       maxLines: textField.maxLines,
-      textDirection: textField.textDirection,
+      textDirection: textField.textDirection  ?? TextDirection.ltr,
     );
 
 Size getHintTextSize(TextField textField, [TextStyle defaultStyle]) =>
@@ -51,7 +51,7 @@ Size getHintTextSize(TextField textField, [TextStyle defaultStyle]) =>
       textAlign: textField.textAlign,
       strutStyle: textField.strutStyle,
       maxLines: textField.maxLines,
-      textDirection: textField.textDirection,
+      textDirection: textField.textDirection  ?? TextDirection.ltr,
     );
 
 Size getLabelTextSize(TextField textField, [TextStyle defaultStyle]) =>
@@ -61,7 +61,7 @@ Size getLabelTextSize(TextField textField, [TextStyle defaultStyle]) =>
       textAlign: textField.textAlign,
       strutStyle: textField.strutStyle,
       maxLines: textField.maxLines,
-      textDirection: textField.textDirection,
+      textDirection: textField.textDirection  ?? TextDirection.ltr,
     );
 
 Size getTextSize(TextField textField, [TextStyle defaultStyle]) =>
@@ -71,5 +71,5 @@ Size getTextSize(TextField textField, [TextStyle defaultStyle]) =>
       textAlign: textField.textAlign,
       strutStyle: textField.strutStyle,
       maxLines: textField.maxLines,
-      textDirection: textField.textDirection,
+      textDirection: textField.textDirection  ?? TextDirection.ltr,
     );
