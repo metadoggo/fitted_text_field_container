@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.2.0
 * Added `builder` for building complex layouts
 * Fixed calculations to remove the need for a magic number
 * Code tidy-ups and optimisations which should improve performance by a tiny tiny bit
