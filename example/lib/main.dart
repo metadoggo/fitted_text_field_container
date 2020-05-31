@@ -43,6 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
   FocusNode _aniDongFocusNode;
   FocusNode _aniEuroFocusNode;
   FocusNode _aniWholePoundFocusNode;
+  TextEditingController _cbCtl2;
+  FocusNode _cbFn2;
 
   @override
   void initState() {
@@ -59,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _aniDongFocusNode = FocusNode();
     _aniEuroFocusNode = FocusNode();
     _aniWholePoundFocusNode = FocusNode();
+    _cbCtl2 = TextEditingController();
+    _cbFn2 = FocusNode();
     Timer(Duration(milliseconds: 2000), () {
       // Uncomment this for automatic text input
       // runInputer(20);
@@ -217,10 +221,15 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Divider(),
+          ),
           Text(
             'Custom builder example',
             style: Theme.of(context).textTheme.headline4,
           ),
+          Text('A nice star', textAlign: TextAlign.center,),
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
@@ -246,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   onChanged: (value) => setState(() {}),
                   onSubmitted: (String value) {
-                    FocusScope.of(context).requestFocus(_plainFocusNode);
+                    FocusScope.of(context).requestFocus(_cbFn2);
                   },
                 ),
                 builder: (context, child) => Container(
@@ -260,6 +269,64 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: _aniWholePoundCtl.text.isEmpty
                             ? Icon(Icons.star_border)
                             : Icon(Icons.star, color: Colors.amber),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Divider(),
+          ),
+          Text('Prefix/suffix text that doesn\'t disappear', textAlign: TextAlign.center,),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: AnimatedFittedTextFieldContainer(
+                growDuration: Duration(milliseconds: 300),
+                shrinkDuration: Duration(milliseconds: 600),
+                growCurve: Curves.easeOutCirc,
+                shrinkCurve: Curves.easeInCirc,
+                child: TextField(
+                  controller: _cbCtl2,
+                  style: TextStyle(fontSize: 48),
+                  focusNode: _cbFn2,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter(RegExp(r"\d+")),
+                  ],
+                  textAlign: TextAlign.right,
+                  decoration: InputDecoration(
+                    hintText: "0",
+                  ),
+                  onChanged: (value) => setState(() {}),
+                  onSubmitted: (String value) {
+                    FocusScope.of(context).requestFocus(_plainFocusNode);
+                  },
+                ),
+                builder: (context, child) => Container(
+                  child: Stack(
+                    overflow: Overflow.visible,
+                    children: <Widget>[
+                      child,
+                      Positioned(
+                        bottom: 17,
+                        left: -16,
+                        child: Text(
+                          '£',
+                          style: TextStyle(fontSize: 26),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 17,
+                        right: -36,
+                        child: Text(
+                          '.00',
+                          style: TextStyle(fontSize: 26),
+                        ),
                       ),
                     ],
                   ),

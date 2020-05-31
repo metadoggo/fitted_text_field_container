@@ -1,3 +1,6 @@
+## 1.2.1+1
+* Updated documentation
+
 ## 1.2.1
 * Fixed exception thrown when `textDirection` is not set
 * Fixed incorect calculations due to default stules not being available durint initialisation
