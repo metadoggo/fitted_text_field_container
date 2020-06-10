@@ -42,6 +42,9 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// The builder provides the `child` TextField to a function that returns a widget.
   final Widget Function(BuildContext context, TextField child) builder;
 
+  /// If the min width should be based on the hint text, defaults to `true`
+  final bool minWidthFromHintText;
+
   const AnimatedFittedTextFieldContainer({
     Key key,
     this.child,
@@ -53,6 +56,7 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
     this.suffixIconWidth = 48,
     this.minWidth = 0,
     this.maxWidth = double.infinity,
+    this.minWidthFromHintText = true,
     this.builder,
   }) : super(key: key);
   @override
@@ -85,8 +89,7 @@ class _AnimatedFittedTextFieldContainerState
   void didChangeDependencies() {
     // When style is null, it defaults to `subtitle1` of current field.
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    _defaultTextStyle =
-        widget.child.style ?? Theme.of(context).textTheme.subhead;
+    _defaultTextStyle = widget.child.style;
 
     _prefixWidth = getPrefixTextSize(widget.child, _defaultTextStyle).width;
     _suffixWidth = getSuffixTextSize(widget.child, _defaultTextStyle).width;
@@ -118,8 +121,12 @@ class _AnimatedFittedTextFieldContainerState
   }
 
   double _getTextFieldWidth() {
-    double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
-    double width = textWidth > _hintWidth ? textWidth : _hintWidth;
+    double width = getTextSize(widget.child, _defaultTextStyle).width;
+
+    if (widget.minWidthFromHintText || widget.child.controller.text == '') {
+      width = width > _hintWidth ? width : _hintWidth;
+    }
+
     if (_labelWidth > width) {
       width = _labelWidth;
     }
