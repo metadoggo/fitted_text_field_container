@@ -81,7 +81,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
     // Add enough space for the cursor to prevent it being positined onto the next line
     // in a multiline textfield and scrolled in a single-line text field.
     _fixedWidth += widget.child.cursorWidth + 1;
-    _textFieldWidth = _geTextFieldWidth();
+    _textFieldWidth = _getTextFieldWidth();
 
     super.didChangeDependencies();
   }
@@ -92,7 +92,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
     super.dispose();
   }
 
-  double _geTextFieldWidth() {
+  double _getTextFieldWidth() {
     double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
     double width = textWidth > _hintWidth ? textWidth : _hintWidth;
     if (_labelWidth > width) {
@@ -117,7 +117,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   }
 
   void _onTextChanged() {
-    final width = _geTextFieldWidth();
+    final width = _getTextFieldWidth();
     if (width != _textFieldWidth) {
       setState(() {
         _textFieldWidth = width;
