@@ -106,7 +106,7 @@ class _AnimatedFittedTextFieldContainerState
     // in a multiline textfield and scrolled in a single-line text field.
     _fixedWidth += widget.child.cursorWidth + 1;
 
-    _textFieldWidth = _geTextFieldWidth();
+    _textFieldWidth = _getTextFieldWidth();
 
     super.didChangeDependencies();
   }
@@ -117,7 +117,7 @@ class _AnimatedFittedTextFieldContainerState
     super.dispose();
   }
 
-  double _geTextFieldWidth() {
+  double _getTextFieldWidth() {
     double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
     double width = textWidth > _hintWidth ? textWidth : _hintWidth;
     if (_labelWidth > width) {
@@ -135,7 +135,7 @@ class _AnimatedFittedTextFieldContainerState
   }
 
   void _onTextChanged() {
-    final width = _geTextFieldWidth();
+    final width = _getTextFieldWidth();
     if (width != _textFieldWidth) {
       setState(() {
         if (width > _textFieldWidth) {
