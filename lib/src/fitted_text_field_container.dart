@@ -94,6 +94,9 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   double _geTextFieldWidth() {
     double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
+    if (widget.child.decoration.contentPadding != null) {
+      textWidth += widget.child.decoration.contentPadding.collapsedSize.width;
+    }
     double width = textWidth > _hintWidth ? textWidth : _hintWidth;
     if (_labelWidth > width) {
       width = _labelWidth;
