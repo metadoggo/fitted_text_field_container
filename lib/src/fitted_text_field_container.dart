@@ -71,6 +71,10 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
     _labelWidth = getLabelTextSize(widget.child, _defaultTextStyle).width;
     _fixedWidth = _prefixWidth + _suffixWidth;
 
+    if (widget.child.decoration.contentPadding != null) {
+      _fixedWidth += widget.child.decoration.contentPadding.collapsedSize.width;
+    }
+
     if (widget.child.decoration.prefixIcon != null) {
       _fixedWidth += widget.prefixIconWidth;
     }
@@ -94,21 +98,11 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   double _geTextFieldWidth() {
     double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
-    if (widget.child.decoration.contentPadding != null) {
-      textWidth += widget.child.decoration.contentPadding.collapsedSize.width;
-    }
     double width = textWidth > _hintWidth ? textWidth : _hintWidth;
     if (_labelWidth > width) {
       width = _labelWidth;
     }
     width += _fixedWidth;
-
-    if (widget.child.decoration.prefixIcon != null) {
-      width += widget.prefixIconWidth;
-    }
-    if (widget.child.decoration.suffixIcon != null) {
-      width += widget.suffixIconWidth;
-    }
 
     if (width < widget.minWidth) {
       width = widget.minWidth;

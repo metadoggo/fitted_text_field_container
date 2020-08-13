@@ -155,12 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               maxLines: null,
               inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp(r"\d+\.?\d*")),
+                FilteringTextInputFormatter.allow(RegExp(r"\d+\.?\d*")),
               ],
               textAlign: TextAlign.right,
               decoration: InputDecoration(
                 prefixText: "£",
-                hintText: "0",
+                hintText: "10000000f.00",
               ),
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_paddingFocusNode);
@@ -190,6 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderRadius: BorderRadius.circular(4),
                   borderSide: BorderSide(color: Colors.blue, width: 3),
                 ),
+                hintText: "10000000f.00",
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 15,
@@ -210,12 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp(r"\d+\.?\d*")),
+                FilteringTextInputFormatter.allow(RegExp(r"\d+\.?\d*")),
               ],
               textAlign: TextAlign.right,
               decoration: InputDecoration(
                 prefixText: "\$",
-                hintText: "0",
+                hintText: "a million dollar man",
               ),
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_aniEuroFocusNode);
@@ -230,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp(r"\d+\.?\d*")),
+                FilteringTextInputFormatter.allow(RegExp(r"\d+\.?\d*")),
               ],
               textAlign: TextAlign.right,
               decoration: InputDecoration(
@@ -249,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
               inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp(r"\d+")),
+                FilteringTextInputFormatter.allow(RegExp(r"\d+")),
               ],
               textAlign: TextAlign.right,
               decoration: InputDecoration(
@@ -269,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
               inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp(r"\d+")),
+                FilteringTextInputFormatter.allow(RegExp(r"\d+")),
               ],
               textAlign: TextAlign.right,
               decoration: InputDecoration(
@@ -284,6 +285,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderSide: BorderSide(color: Colors.blue, width: 3),
                 ),
                 border: OutlineInputBorder(),
+                hintText: "a million dollar man",
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 15,
                   horizontal: 20,
@@ -313,7 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    WhitelistingTextInputFormatter(RegExp(r"\d+")),
+                    FilteringTextInputFormatter.allow(RegExp(r"\d+")),
                   ],
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
