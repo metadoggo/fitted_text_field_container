@@ -33,15 +33,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _plainCtl;
   TextEditingController _poundCtl;
+  TextEditingController _paddingCtl;
   TextEditingController _aniDollarCtl;
   TextEditingController _aniDongCtl;
   TextEditingController _aniEuroCtl;
+  TextEditingController _aniPaddingCtl;
   TextEditingController _aniWholePoundCtl;
   FocusNode _plainFocusNode;
   FocusNode _poundFocusNode;
+  FocusNode _paddingFocusNode;
   FocusNode _aniDollarFocusNode;
   FocusNode _aniDongFocusNode;
   FocusNode _aniEuroFocusNode;
+  FocusNode _aniPaddingFocusNode;
   FocusNode _aniWholePoundFocusNode;
 
   @override
@@ -49,16 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _plainCtl = TextEditingController();
     _poundCtl = TextEditingController();
+    _paddingCtl = TextEditingController();
     _aniDollarCtl = TextEditingController();
     _aniDongCtl = TextEditingController();
     _aniEuroCtl = TextEditingController();
+    _aniPaddingCtl = TextEditingController();
     _aniWholePoundCtl = TextEditingController();
     _plainFocusNode = FocusNode();
     _poundFocusNode = FocusNode();
+    _paddingFocusNode = FocusNode();
     _aniDollarFocusNode = FocusNode();
     _aniDongFocusNode = FocusNode();
     _aniEuroFocusNode = FocusNode();
+    _aniPaddingFocusNode = FocusNode();
     _aniWholePoundFocusNode = FocusNode();
+
     Timer(Duration(milliseconds: 2000), () {
       // Uncomment this for automatic text input
       // runInputer(20);
@@ -72,9 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
         _plainCtl.text += String.fromCharCode(97 + rand.nextInt(25));
         String num = rand.nextInt(9).toString();
         _poundCtl.text += num;
+        _paddingCtl.text += num;
         _aniDollarCtl.text += num;
         _aniDongCtl.text += num;
         _aniEuroCtl.text += num;
+        _aniPaddingCtl.text += num;
         _aniWholePoundCtl.text += num;
         if (i > 0) {
           runInputer(i - 1);
@@ -90,9 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _plainCtl.text = _plainCtl.text.substring(0, end);
         _poundCtl.text = _poundCtl.text.substring(0, end);
+        _paddingCtl.text = _paddingCtl.text.substring(0, end);
         _aniDollarCtl.text = _aniDollarCtl.text.substring(0, end);
         _aniDongCtl.text = _aniDongCtl.text.substring(0, end);
         _aniEuroCtl.text = _aniEuroCtl.text.substring(0, end);
+        _aniPaddingCtl.text = _aniPaddingCtl.text.substring(0, end);
         _aniWholePoundCtl.text = _aniWholePoundCtl.text.substring(0, end);
         if (_plainCtl.text.length > 0) {
           runDelete(_plainCtl.text.length - 1,
@@ -150,8 +163,39 @@ class _MyHomePageState extends State<MyHomePage> {
                 hintText: "0",
               ),
               onSubmitted: (String value) {
+                FocusScope.of(context).requestFocus(_paddingFocusNode);
+              },
+            ),
+          ),
+          Fit(
+            child: TextField(
+              controller: _paddingCtl,
+              style: TextStyle(fontSize: 26),
+              focusNode: _paddingFocusNode,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.text,
+              textAlign: TextAlign.left,
+              maxLines: null,
+              onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_aniDollarFocusNode);
               },
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(color: Colors.blue, width: 3),
+                ),
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 15,
+                  horizontal: 20,
+                ),
+              ),
             ),
           ),
           Text(
@@ -211,6 +255,39 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: InputDecoration(
                 suffixText: " ₫",
                 hintText: "0",
+              ),
+              onSubmitted: (String value) {
+                FocusScope.of(context).requestFocus(_aniPaddingFocusNode);
+              },
+            ),
+          ),
+          AnimFit(
+            child: TextField(
+              controller: _aniPaddingCtl,
+              style: TextStyle(fontSize: 26),
+              focusNode: _aniPaddingFocusNode,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                WhitelistingTextInputFormatter(RegExp(r"\d+")),
+              ],
+              textAlign: TextAlign.right,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(color: Colors.blue, width: 3),
+                ),
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 15,
+                  horizontal: 20,
+                ),
               ),
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_aniWholePoundFocusNode);
