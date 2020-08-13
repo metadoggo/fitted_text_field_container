@@ -3,7 +3,7 @@ description: A Container that automatically resizes to fit a the text value of a
 homepage: https://medium.com/@huyffs/fitted-textfield-container-for-flutter-c9c63644441c
 repository: https://github.com/huyffs/fitted_text_field_container
 
-version: 1.2.1
+version: 1.3.0
 
 environment:
   sdk: ">=2.0.0 <3.0.0"

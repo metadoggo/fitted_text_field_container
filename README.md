@@ -8,14 +8,11 @@ Read the short blog: https://medium.com/@huyffs/fitted-textfield-container-for-f
 
 ### FittedTextFieldContainer
 
-| Param             | Type                                                     | Default           | Description                                                                                                    |
-|-------------------|----------------------------------------------------------|-------------------|----------------------------------------------------------------------------------------------------------------|
-| `child`           | `TextField`                                              | * _required_      | The `TextField` to fit                                                                                         |
-| `prefixIconWidth` | `double`                                                 | `48`              | Width of the `prefixIcon` (if used)                                                                            |
-| `suffixIconWidth` | `double`                                                 | `48`              | Width of the `suffixIcon` (if used)                                                                            |
-| `minWidth`        | `double`                                                 | `0`               | Minimum width - `0` means there is no minimum width - the width will be affected by `labelText` and `hintText` |
-| `maxWidth`        | `double`                                                 | `double.infinity` | Maximum width - `double.infinity` means that the maximum width is only constrained by the parent widget        |
-| `builder`         | `Widget Function(BuildContext context, TextField child)` | `null`            | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function   |
+| Param        | Type                                                     | Default      | Description                                                                                                  |
+|--------------|----------------------------------------------------------|--------------|--------------------------------------------------------------------------------------------------------------|
+| `child`      | `TextField`                                              | * _required_ | The `TextField` to fit                                                                                       |
+| `calculator` | `double Function(TextFieldMeasurer measurer)`            | `null`       | A function to calculate the width                                                                            |
+| `builder`    | `Widget Function(BuildContext context, TextField child)` | `null`       | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function |
 
 #### Example
 
@@ -33,18 +30,15 @@ FittedTextFieldContainer(
 ```
 
 ### AnimatedFittedTextFieldContainer
-| Param             | Type                                                     | Default                       | Description                                                                                                    |
-|-------------------|----------------------------------------------------------|-------------------------------|----------------------------------------------------------------------------------------------------------------|
-| `child`           | `TextField`                                              | * _required_                  | The `TextField` to fit                                                                                         |
-| `growDuration`    | `Duration`                                               | `Duration(milliseconds: 300)` | Duration to animate the container's width when `TextField` grows                                               |
-| `shrinkDuration`  | `Duration`                                               | `Duration(milliseconds: 600)` | Duration to animate the container's width when `TextField` shrinks                                             |
-| `growCurve`       | `Curve`                                                  | `Curves.easeOutCirc`          | The curve to use in the grow animation                                                                         |
-| `shrinkCurve`     | `Curve`                                                  | `Curves.easeInCirc`           | The curve to use in the shrink animation                                                                       |
-| `prefixIconWidth` | `double`                                                 | `48`                          | Width of the `prefixIcon` (if used)                                                                            |
-| `suffixIconWidth` | `double`                                                 | `48`                          | Width of the `suffixIcon` (if used)                                                                            |
-| `minWidth`        | `double`                                                 | `0`                           | Minimum width - `0` means there is no minimum width - the width will be affected by `labelText` and `hintText` |
-| `maxWidth`        | `double`                                                 | `double.infinity`             | Maximum width - `double.infinity` means that the maximum width is only constrained by the parent widget        |
-| `builder`         | `Widget Function(BuildContext context, TextField child)` | `null`                        | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function   |
+| Param            | Type                                                     | Default                       | Description                                                                                                  |
+|------------------|----------------------------------------------------------|-------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `child`          | `TextField`                                              | * _required_                  | The `TextField` to fit                                                                                       |
+| `calculator`     | `double Function(TextFieldMeasurer measurer)`            | `null`                        | A function to calculate the width                                                                            |
+| `growDuration`   | `Duration`                                               | `Duration(milliseconds: 300)` | Duration to animate the container's width when `TextField` grows                                             |
+| `shrinkDuration` | `Duration`                                               | `Duration(milliseconds: 600)` | Duration to animate the container's width when `TextField` shrinks                                           |
+| `growCurve`      | `Curve`                                                  | `Curves.easeOutCirc`          | The curve to use in the grow animation                                                                       |
+| `shrinkCurve`    | `Curve`                                                  | `Curves.easeInCirc`           | The curve to use in the shrink animation                                                                     |
+| `builder`        | `Widget Function(BuildContext context, TextField child)` | `null`                        | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function |
 
 #### Example
 
@@ -65,19 +59,30 @@ AnimatedFittedTextFieldContainer(
 )
 ```
 
-### Using the `builder`
+### Using the custom width calculator
 ```dart
 AnimatedFittedTextFieldContainer(
-    growDuration: Duration(milliseconds: 300),
-    shrinkDuration: Duration(milliseconds: 600),
-    growCurve: Curves.easeOutCirc,
-    shrinkCurve: Curves.easeInCirc,
+    calculator: (m) =>
+        m.fixedWidths +
+        max(m.labelWidth, max(m.hintWidth, m.textWidth)),
     child: TextField(
         controller: someTextEditingController,
         textAlign: TextAlign.right,
         decoration: InputDecoration(
-            prefixText: "£",
-            labelText: "Amount",
+            hintText: "Width of hint text",
+        ),
+    ),
+)
+```
+
+### Using the `builder`
+```dart
+AnimatedFittedTextFieldContainer(
+    child: TextField(
+        controller: someTextEditingController,
+        textAlign: TextAlign.right,
+        decoration: InputDecoration(
+            labelText: "Twinkle twinkle",
         ),
     ),
     builder: (context, child) => Container(

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:math' show max, Random;
 
 import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
@@ -31,14 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController _plainCtl;
-  TextEditingController _poundCtl;
-  TextEditingController _paddingCtl;
-  TextEditingController _aniDollarCtl;
-  TextEditingController _aniDongCtl;
-  TextEditingController _aniEuroCtl;
-  TextEditingController _aniPaddingCtl;
-  TextEditingController _aniWholePoundCtl;
+  TextEditingController _textEditingCtl;
   FocusNode _plainFocusNode;
   FocusNode _poundFocusNode;
   FocusNode _paddingFocusNode;
@@ -51,14 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _plainCtl = TextEditingController();
-    _poundCtl = TextEditingController();
-    _paddingCtl = TextEditingController();
-    _aniDollarCtl = TextEditingController();
-    _aniDongCtl = TextEditingController();
-    _aniEuroCtl = TextEditingController();
-    _aniPaddingCtl = TextEditingController();
-    _aniWholePoundCtl = TextEditingController();
+    _textEditingCtl = TextEditingController();
     _plainFocusNode = FocusNode();
     _poundFocusNode = FocusNode();
     _paddingFocusNode = FocusNode();
@@ -78,15 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void runInputer(int i) {
     Timer(Duration(milliseconds: 50 + rand.nextInt(500)), () {
       setState(() {
-        _plainCtl.text += String.fromCharCode(97 + rand.nextInt(25));
+        _textEditingCtl.text += String.fromCharCode(97 + rand.nextInt(25));
         String num = rand.nextInt(9).toString();
-        _poundCtl.text += num;
-        _paddingCtl.text += num;
-        _aniDollarCtl.text += num;
-        _aniDongCtl.text += num;
-        _aniEuroCtl.text += num;
-        _aniPaddingCtl.text += num;
-        _aniWholePoundCtl.text += num;
+        _textEditingCtl.text += num;
         if (i > 0) {
           runInputer(i - 1);
         } else {
@@ -99,16 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void runDelete(int end, int delay) {
     Timer(Duration(milliseconds: delay), () {
       setState(() {
-        _plainCtl.text = _plainCtl.text.substring(0, end);
-        _poundCtl.text = _poundCtl.text.substring(0, end);
-        _paddingCtl.text = _paddingCtl.text.substring(0, end);
-        _aniDollarCtl.text = _aniDollarCtl.text.substring(0, end);
-        _aniDongCtl.text = _aniDongCtl.text.substring(0, end);
-        _aniEuroCtl.text = _aniEuroCtl.text.substring(0, end);
-        _aniPaddingCtl.text = _aniPaddingCtl.text.substring(0, end);
-        _aniWholePoundCtl.text = _aniWholePoundCtl.text.substring(0, end);
-        if (_plainCtl.text.length > 0) {
-          runDelete(_plainCtl.text.length - 1,
+        _textEditingCtl.text = _textEditingCtl.text.substring(0, end);
+        if (_textEditingCtl.text.length > 0) {
+          runDelete(_textEditingCtl.text.length - 1,
               ((600 / 10) * end).round() + rand.nextInt(300) + 300);
         } else {
           Timer(Duration(milliseconds: 2000), () {
@@ -134,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Fit(
             child: TextField(
-              controller: _plainCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 16),
               focusNode: _plainFocusNode,
               textInputAction: TextInputAction.next,
@@ -144,11 +117,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_poundFocusNode);
               },
+              decoration: InputDecoration(labelText: "Multiline textfield"),
             ),
           ),
           Fit(
             child: TextField(
-              controller: _poundCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 26),
               focusNode: _poundFocusNode,
               textInputAction: TextInputAction.next,
@@ -160,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textAlign: TextAlign.right,
               decoration: InputDecoration(
                 prefixText: "£",
-                hintText: "10000000f.00",
+                labelText: "Prefix",
               ),
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_paddingFocusNode);
@@ -169,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Fit(
             child: TextField(
-              controller: _paddingCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 26),
               focusNode: _paddingFocusNode,
               textInputAction: TextInputAction.next,
@@ -190,13 +164,38 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderRadius: BorderRadius.circular(4),
                   borderSide: BorderSide(color: Colors.blue, width: 3),
                 ),
-                hintText: "10000000f.00",
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 15,
                   horizontal: 20,
                 ),
+                prefixText: "->",
+                suffixText: "<-",
+                hintText: "Decorations",
               ),
+            ),
+          ),
+          Fit(
+            calculator: (m) =>
+                m.fixedWidths +
+                max(m.labelWidth, max(m.hintWidth, m.textWidth)),
+            child: TextField(
+              controller: _textEditingCtl,
+              style: TextStyle(fontSize: 26),
+              focusNode: _poundFocusNode,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              maxLines: null,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"\d+\.?\d*")),
+              ],
+              textAlign: TextAlign.right,
+              decoration: InputDecoration(
+                hintText: "Custom width calculator",
+              ),
+              onSubmitted: (String value) {
+                FocusScope.of(context).requestFocus(_paddingFocusNode);
+              },
             ),
           ),
           Text(
@@ -205,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           AnimFit(
             child: TextField(
-              controller: _aniDollarCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 16),
               focusNode: _aniDollarFocusNode,
               textInputAction: TextInputAction.next,
@@ -216,7 +215,6 @@ class _MyHomePageState extends State<MyHomePage> {
               textAlign: TextAlign.right,
               decoration: InputDecoration(
                 prefixText: "\$",
-                hintText: "a million dollar man",
               ),
               onSubmitted: (String value) {
                 FocusScope.of(context).requestFocus(_aniEuroFocusNode);
@@ -225,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           AnimFit(
             child: TextField(
-              controller: _aniEuroCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 26),
               focusNode: _aniEuroFocusNode,
               textInputAction: TextInputAction.next,
@@ -244,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           AnimFit(
             child: TextField(
-              controller: _aniDongCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 26),
               focusNode: _aniDongFocusNode,
               textInputAction: TextInputAction.next,
@@ -264,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           AnimFit(
             child: TextField(
-              controller: _aniPaddingCtl,
+              controller: _textEditingCtl,
               style: TextStyle(fontSize: 26),
               focusNode: _aniPaddingFocusNode,
               textInputAction: TextInputAction.next,
@@ -285,7 +283,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderSide: BorderSide(color: Colors.blue, width: 3),
                 ),
                 border: OutlineInputBorder(),
-                hintText: "a million dollar man",
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 15,
                   horizontal: 20,
@@ -309,7 +306,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 growCurve: Curves.easeOutCirc,
                 shrinkCurve: Curves.easeInCirc,
                 child: TextField(
-                  controller: _aniWholePoundCtl,
+                  controller: _textEditingCtl,
                   style: TextStyle(fontSize: 26),
                   focusNode: _aniWholePoundFocusNode,
                   textInputAction: TextInputAction.next,
@@ -336,7 +333,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Positioned(
                         top: 0,
                         right: -22,
-                        child: _aniWholePoundCtl.text.isEmpty
+                        child: _textEditingCtl.text.length < 5
                             ? Icon(Icons.star_border)
                             : Icon(Icons.star, color: Colors.amber),
                       ),
@@ -354,15 +351,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class Fit extends StatelessWidget {
   final Widget child;
+  final CalculateFunction calculator;
 
-  Fit({Key key, this.child}) : super(key: key);
+  Fit({Key key, @required this.child, this.calculator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
-        child: FittedTextFieldContainer(minWidth: 16, child: child),
+        child: FittedTextFieldContainer(child: child, calculator: calculator),
       ),
     );
   }

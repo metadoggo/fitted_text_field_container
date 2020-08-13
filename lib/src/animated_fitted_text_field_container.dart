@@ -1,9 +1,11 @@
+import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
 
 import 'utils.dart';
 
 class AnimatedFittedTextFieldContainer extends StatefulWidget {
-  /// Creates an animated container to wrap a [child] `TextField`  and automatically resizes to fit the [child]'s text value
+  /// Creates an animated container to wrap a [child] `TextField`  and
+  /// automatically resizes to fit the [child]'s text value
   ///
   /// ```dart
   /// AnimatedFittedTextFieldContainer(
@@ -26,33 +28,21 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// `Curve` to use for animating shrinkage
   final Curve shrinkCurve;
 
-  /// The width of the `TextField.decoration.prefixIcon` if used
-  final double prefixIconWidth;
+  /// The calculator provides measured values that returns a width value
+  final CalculateFunction calculator;
 
-  /// The width of the `TextField.decoration.suffixIcon` if used
-  final double suffixIconWidth;
-
-  /// The minimum width, default is 0 - which makes the TextField invisible if the TextField
-  /// doesn't include properties that takes up space (such as labelText, prefixIcon, etc).
-  final double minWidth;
-
-  /// The maximum width, defaults to `double.infinity` - i.e. there is no maximum
-  final double maxWidth;
-
-  /// The builder provides the `child` TextField to a function that returns a widget.
+  /// The builder provides the `child` TextField to a function that returns a
+  /// widget.
   final Widget Function(BuildContext context, TextField child) builder;
 
   const AnimatedFittedTextFieldContainer({
     Key key,
-    this.child,
+    @required this.child,
     this.growDuration = const Duration(milliseconds: 300),
     this.shrinkDuration = const Duration(milliseconds: 600),
     this.growCurve = Curves.easeOutCirc,
     this.shrinkCurve = Curves.easeInCirc,
-    this.prefixIconWidth = 48,
-    this.suffixIconWidth = 48,
-    this.minWidth = 0,
-    this.maxWidth = double.infinity,
+    this.calculator,
     this.builder,
   }) : super(key: key);
   @override
@@ -62,19 +52,18 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
 
 class _AnimatedFittedTextFieldContainerState
     extends State<AnimatedFittedTextFieldContainer> {
-  double _prefixWidth;
-  double _suffixWidth;
-  double _hintWidth;
-  double _labelWidth;
-  double _fixedWidth;
+  CalculateFunction _calculator;
   double _textFieldWidth;
+  TextFieldMeasurer _measurer;
   Duration _duration;
   Curve _curve;
-  TextStyle _defaultTextStyle;
+  bool _didGrow = true;
 
   @override
   void initState() {
     assert(widget.child.controller != null);
+    _calculator =
+        widget.calculator ?? FittedTextFieldContainer.defaultCalculator;
     widget.child.controller.addListener(_onTextChanged);
     _duration = widget.growDuration;
     _curve = widget.growCurve;
@@ -85,32 +74,10 @@ class _AnimatedFittedTextFieldContainerState
   void didChangeDependencies() {
     // When style is null, it defaults to `subtitle1` of current field.
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    _defaultTextStyle =
-        widget.child.style ?? Theme.of(context).textTheme.subhead;
+    final textStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
 
-    _prefixWidth = getPrefixTextSize(widget.child, _defaultTextStyle).width;
-    _suffixWidth = getSuffixTextSize(widget.child, _defaultTextStyle).width;
-    _hintWidth = getHintTextSize(widget.child, _defaultTextStyle).width;
-    _labelWidth = getLabelTextSize(widget.child, _defaultTextStyle).width;
-    _fixedWidth = _prefixWidth + _suffixWidth;
-    _fixedWidth = _prefixWidth + _suffixWidth;
-
-    if (widget.child.decoration.contentPadding != null) {
-      _fixedWidth += widget.child.decoration.contentPadding.collapsedSize.width;
-    }
-
-    if (widget.child.decoration.prefixIcon != null) {
-      _fixedWidth += widget.prefixIconWidth;
-    }
-    if (widget.child.decoration.suffixIcon != null) {
-      _fixedWidth += widget.suffixIconWidth;
-    }
-
-    // Add enough space for the cursor to prevent it being positined onto the next line
-    // in a multiline textfield and scrolled in a single-line text field.
-    _fixedWidth += widget.child.cursorWidth + 1;
-
-    _textFieldWidth = _geTextFieldWidth();
+    _measurer = TextFieldMeasurer.create(widget.child, textStyle);
+    _textFieldWidth = _calculator(_measurer);
 
     super.didChangeDependencies();
   }
@@ -121,37 +88,24 @@ class _AnimatedFittedTextFieldContainerState
     super.dispose();
   }
 
-  double _geTextFieldWidth() {
-    double textWidth = getTextSize(widget.child, _defaultTextStyle).width;
-    double width = textWidth > _hintWidth ? textWidth : _hintWidth;
-    if (_labelWidth > width) {
-      width = _labelWidth;
-    }
-    width += _fixedWidth;
-
-    if (width < widget.minWidth) {
-      width = widget.minWidth;
-    }
-    if (width > widget.maxWidth) {
-      width = widget.maxWidth;
-    }
-    return width;
-  }
-
   void _onTextChanged() {
-    final width = _geTextFieldWidth();
+    final width = _calculator(_measurer);
     if (width != _textFieldWidth) {
       setState(() {
         if (width > _textFieldWidth) {
-          _duration = widget.growDuration;
-          _curve = widget.growCurve;
-        } else {
+          if (!_didGrow) {
+            _duration = widget.growDuration;
+            _curve = widget.growCurve;
+            _didGrow = true;
+          }
+        } else if (_didGrow) {
           _duration = widget.shrinkDuration;
           _curve = widget.shrinkCurve;
+          _didGrow = false;
         }
+
         _textFieldWidth = width;
       });
-      // widget.child.controller.selection = widget.child.controller.selection.copyWith();
     }
   }
 
