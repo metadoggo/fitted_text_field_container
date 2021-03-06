@@ -29,15 +29,15 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   final Curve shrinkCurve;
 
   /// The calculator provides measured values that returns a width value
-  final CalculateFunction calculator;
+  final CalculateFunction? calculator;
 
   /// The builder provides the `child` TextField to a function that returns a
   /// widget.
-  final Widget Function(BuildContext context, TextField child) builder;
+  final Widget Function(BuildContext context, TextField child)? builder;
 
   const AnimatedFittedTextFieldContainer({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.growDuration = const Duration(milliseconds: 300),
     this.shrinkDuration = const Duration(milliseconds: 600),
     this.growCurve = Curves.easeOutCirc,
@@ -52,11 +52,11 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
 
 class _AnimatedFittedTextFieldContainerState
     extends State<AnimatedFittedTextFieldContainer> {
-  CalculateFunction _calculator;
-  double _textFieldWidth;
-  TextFieldMeasurer _measurer;
-  Duration _duration;
-  Curve _curve;
+  late CalculateFunction _calculator;
+  late double _textFieldWidth;
+  late TextFieldMeasurer _measurer;
+  late Duration _duration;
+  late Curve _curve;
   bool _didGrow = true;
 
   @override
@@ -64,7 +64,7 @@ class _AnimatedFittedTextFieldContainerState
     assert(widget.child.controller != null);
     _calculator =
         widget.calculator ?? FittedTextFieldContainer.defaultCalculator;
-    widget.child.controller.addListener(_onTextChanged);
+    widget.child.controller!.addListener(_onTextChanged);
     _duration = widget.growDuration;
     _curve = widget.growCurve;
     super.initState();
@@ -84,7 +84,7 @@ class _AnimatedFittedTextFieldContainerState
 
   @override
   void dispose() {
-    widget.child.controller.removeListener(_onTextChanged);
+    widget.child.controller!.removeListener(_onTextChanged);
     super.dispose();
   }
 
@@ -117,7 +117,7 @@ class _AnimatedFittedTextFieldContainerState
       width: _textFieldWidth,
       child: widget.builder == null
           ? widget.child
-          : widget.builder(context, widget.child),
+          : widget.builder!(context, widget.child),
     );
   }
 }
