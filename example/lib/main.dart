@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _textEditingCtl;
   late FocusNode _plainFocusNode;
   late FocusNode _poundFocusNode;
-  late FocusNode/*!*/ _paddingFocusNode;
+  late FocusNode _paddingFocusNode;
   late FocusNode _aniDollarFocusNode;
   late FocusNode _aniDongFocusNode;
   late FocusNode _aniEuroFocusNode;
@@ -327,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 builder: (context, child) => Container(
                   child: Stack(
-                    overflow: Overflow.visible,
+                    clipBehavior: Clip.none ,
                     children: <Widget>[
                       child,
                       Positioned(
@@ -350,7 +350,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Fit extends StatelessWidget {
-  final Widget child;
+  final TextField child;
   final CalculateFunction? calculator;
 
   Fit({Key? key, required this.child, this.calculator}) : super(key: key);
@@ -360,7 +360,7 @@ class Fit extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
-        child: FittedTextFieldContainer(child: child as TextField, calculator: calculator),
+        child: FittedTextFieldContainer(child: child, calculator: calculator),
       ),
     );
   }
