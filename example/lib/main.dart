@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -31,15 +31,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController _textEditingCtl;
-  FocusNode _plainFocusNode;
-  FocusNode _poundFocusNode;
-  FocusNode _paddingFocusNode;
-  FocusNode _aniDollarFocusNode;
-  FocusNode _aniDongFocusNode;
-  FocusNode _aniEuroFocusNode;
-  FocusNode _aniPaddingFocusNode;
-  FocusNode _aniWholePoundFocusNode;
+  late TextEditingController _textEditingCtl;
+  late FocusNode _plainFocusNode;
+  late FocusNode _poundFocusNode;
+  late FocusNode/*!*/ _paddingFocusNode;
+  late FocusNode _aniDollarFocusNode;
+  late FocusNode _aniDongFocusNode;
+  late FocusNode _aniEuroFocusNode;
+  late FocusNode _aniPaddingFocusNode;
+  late FocusNode _aniWholePoundFocusNode;
 
   @override
   void initState() {
@@ -351,16 +351,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class Fit extends StatelessWidget {
   final Widget child;
-  final CalculateFunction calculator;
+  final CalculateFunction? calculator;
 
-  Fit({Key key, @required this.child, this.calculator}) : super(key: key);
+  Fit({Key? key, required this.child, this.calculator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
-        child: FittedTextFieldContainer(child: child, calculator: calculator),
+        child: FittedTextFieldContainer(child: child as TextField, calculator: calculator),
       ),
     );
   }
@@ -369,7 +369,7 @@ class Fit extends StatelessWidget {
 class AnimFit extends StatelessWidget {
   final TextField child;
 
-  AnimFit({Key key, this.child}) : super(key: key);
+  AnimFit({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
