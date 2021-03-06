@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math' show max, Random;
+import 'dart:math' show Random;
 
 import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
@@ -176,9 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Fit(
-            calculator: (m) =>
-                m.fixedWidths +
-                max(m.labelWidth, max(m.hintWidth, m.textWidth)),
+            calculator: FittedTextFieldCalculator.fitAll,
             child: TextField(
               controller: _textEditingCtl,
               style: TextStyle(fontSize: 26),

@@ -1,7 +1,7 @@
-import 'package:fitted_text_field_container/fitted_text_field_container.dart';
+import 'package:fitted_text_field_container/src/calculator.dart';
 import 'package:flutter/material.dart';
 
-import 'utils.dart';
+import 'measurer.dart';
 
 class AnimatedFittedTextFieldContainer extends StatefulWidget {
   /// Creates an animated container to wrap a [child] `TextField`  and
@@ -38,13 +38,20 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
   const AnimatedFittedTextFieldContainer({
     Key key,
     @required this.child,
-    this.growDuration = const Duration(milliseconds: 300),
-    this.shrinkDuration = const Duration(milliseconds: 600),
-    this.growCurve = Curves.easeOutCirc,
-    this.shrinkCurve = Curves.easeInCirc,
-    this.calculator,
     this.builder,
-  }) : super(key: key);
+    CalculateFunction calculator,
+    Duration growDuration,
+    Duration shrinkDuration,
+    Curve growCurve,
+    Curve shrinkCurve,
+  })  : assert(child != null),
+        calculator = calculator ?? FittedTextFieldCalculator.fitVisible,
+        growDuration = growDuration ?? const Duration(milliseconds: 300),
+        shrinkDuration = shrinkDuration ?? const Duration(milliseconds: 600),
+        growCurve = growCurve ?? Curves.easeOutCirc,
+        shrinkCurve = shrinkCurve ?? Curves.easeInCirc,
+        super(key: key);
+
   @override
   _AnimatedFittedTextFieldContainerState createState() =>
       _AnimatedFittedTextFieldContainerState();
@@ -52,9 +59,8 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
 
 class _AnimatedFittedTextFieldContainerState
     extends State<AnimatedFittedTextFieldContainer> {
-  CalculateFunction _calculator;
   double _textFieldWidth;
-  TextFieldMeasurer _measurer;
+  FittedTextFieldMeasurer _measurer;
   Duration _duration;
   Curve _curve;
   bool _didGrow = true;
@@ -62,8 +68,6 @@ class _AnimatedFittedTextFieldContainerState
   @override
   void initState() {
     assert(widget.child.controller != null);
-    _calculator =
-        widget.calculator ?? FittedTextFieldContainer.defaultCalculator;
     widget.child.controller.addListener(_onTextChanged);
     _duration = widget.growDuration;
     _curve = widget.growCurve;
@@ -76,8 +80,8 @@ class _AnimatedFittedTextFieldContainerState
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
     final textStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
 
-    _measurer = TextFieldMeasurer.create(widget.child, textStyle);
-    _textFieldWidth = _calculator(_measurer);
+    _measurer = FittedTextFieldMeasurer.create(widget.child, textStyle);
+    _textFieldWidth = widget.calculator(_measurer);
 
     super.didChangeDependencies();
   }
@@ -89,7 +93,7 @@ class _AnimatedFittedTextFieldContainerState
   }
 
   void _onTextChanged() {
-    final width = _calculator(_measurer);
+    final width = widget.calculator(_measurer);
     if (width != _textFieldWidth) {
       setState(() {
         if (width > _textFieldWidth) {

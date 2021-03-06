@@ -8,11 +8,11 @@ Read the short blog: https://medium.com/@huyffs/fitted-textfield-container-for-f
 
 ### FittedTextFieldContainer
 
-| Param        | Type                                                     | Default      | Description                                                                                                  |
-|--------------|----------------------------------------------------------|--------------|--------------------------------------------------------------------------------------------------------------|
-| `child`      | `TextField`                                              | * _required_ | The `TextField` to fit                                                                                       |
-| `calculator` | `double Function(TextFieldMeasurer measurer)`            | `null`       | A function to calculate the width                                                                            |
-| `builder`    | `Widget Function(BuildContext context, TextField child)` | `null`       | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function |
+| Param        | Type                                                     | Default                                | Description                                                                                                                                                               |
+|--------------|----------------------------------------------------------|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `child`      | `TextField`                                              | * _required_                           | The `TextField` to fit                                                                                                                                                    |
+| `calculator` | `CalculateFunction`                                      | `FittedTextFieldCalculator.fitVisible` | A function to calculate the width. The default function fits the visible content & decorations (i.e. it collapses to the content/label's width when hint text disappears) |
+| `builder`    | `Widget Function(BuildContext context, TextField child)` | `null`                                 | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function                                                              |
 
 #### Example
 
@@ -30,15 +30,14 @@ FittedTextFieldContainer(
 ```
 
 ### AnimatedFittedTextFieldContainer
-| Param            | Type                                                     | Default                       | Description                                                                                                  |
-|------------------|----------------------------------------------------------|-------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `child`          | `TextField`                                              | * _required_                  | The `TextField` to fit                                                                                       |
-| `calculator`     | `double Function(TextFieldMeasurer measurer)`            | `null`                        | A function to calculate the width                                                                            |
-| `growDuration`   | `Duration`                                               | `Duration(milliseconds: 300)` | Duration to animate the container's width when `TextField` grows                                             |
-| `shrinkDuration` | `Duration`                                               | `Duration(milliseconds: 600)` | Duration to animate the container's width when `TextField` shrinks                                           |
-| `growCurve`      | `Curve`                                                  | `Curves.easeOutCirc`          | The curve to use in the grow animation                                                                       |
-| `shrinkCurve`    | `Curve`                                                  | `Curves.easeInCirc`           | The curve to use in the shrink animation                                                                     |
-| `builder`        | `Widget Function(BuildContext context, TextField child)` | `null`                        | A builder that can be used to build complex layouts. The `child` TextField is provided to the build function |
+All params from `FittedTextFieldContainer` plus the following
+
+| Param            | Type       | Default                       | Description                                                        |
+|------------------|------------|-------------------------------|--------------------------------------------------------------------|
+| `growCurve`      | `Curve`    | `Curves.easeOutCirc`          | The curve to use in the grow animation                             |
+| `growDuration`   | `Duration` | `Duration(milliseconds: 300)` | Duration to animate the container's width when `TextField` grows   |
+| `shrinkCurve`    | `Curve`    | `Curves.easeInCirc`           | The curve to use in the shrink animation                           |
+| `shrinkDuration` | `Duration` | `Duration(milliseconds: 600)` | Duration to animate the container's width when `TextField` shrinks |
 
 #### Example
 
@@ -59,9 +58,26 @@ AnimatedFittedTextFieldContainer(
 )
 ```
 
-### Using the custom width calculator
+### `FittedTextFieldMeasurer`
+A class that takes a `TextField` and `TextStyle` and returns the following measurements:
+* `textField` The fitted textfield
+* `textStyle` The fitted textfield's style or the default style
+* `textWidth` Width of the text content
+* `labelWidth` Width of the label
+* `hintWidth` Width of the hint text
+* `fixedWidths` Width of fixed elements (prefixText, suffixText, contentPadding and cursorWidth)
+
+### `CalculateFunction`
+This function takes measured values and returns a width value. 
+
+#### Signature:
 ```dart
-AnimatedFittedTextFieldContainer(
+double CalculateFunction(FittedTextFieldMeasurer)
+```
+
+#### Example:
+```dart
+FittedTextFieldContainer(
     calculator: (m) =>
         m.fixedWidths +
         max(m.labelWidth, max(m.hintWidth, m.textWidth)),
@@ -72,7 +88,36 @@ AnimatedFittedTextFieldContainer(
             hintText: "Width of hint text",
         ),
     ),
-)
+);
+```
+#### Predefined functions
+A few calculators are provided for common use-cases
+* `fitAll` fits content, label and hint texts
+* `fitVisible` fits the visible content & decorations (i.e. it collapses to the content/label's width when hint text disappears)
+* `fitVisibleWithPadding(double padding)` in addition to fitting visible content it adds a fixed padding value
+* `fitVisibleWithRange(double min, double max)` in addition to fitting visible content it enforces a minimum and (optional) maximum width
+
+#### Example:
+Fit all
+```dart
+FittedTextFieldContainer(
+    calculator: FittedTextFieldCalculator.fitAll,
+    child: ...
+);
+```
+Fit visible with minimum
+```dart
+FittedTextFieldContainer(
+    calculator: FittedTextFieldCalculator.fitVisibleWithRange(120),
+    child: ...
+);
+```
+Fit visible with maximum
+```dart
+FittedTextFieldContainer(
+    calculator: FittedTextFieldCalculator.fitVisibleWithRange(0, 180),
+    child: ...
+);
 ```
 
 ### Using the `builder`

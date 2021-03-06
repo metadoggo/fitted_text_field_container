@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextFieldMeasurer {
-  TextFieldMeasurer._({
+class FittedTextFieldMeasurer {
+  FittedTextFieldMeasurer._({
     @required this.textField,
     @required this.textStyle,
     @required this.hintWidth,
@@ -9,7 +9,8 @@ class TextFieldMeasurer {
     @required this.fixedWidths,
   });
 
-  factory TextFieldMeasurer.create(TextField textField, TextStyle textStyle) {
+  factory FittedTextFieldMeasurer.create(
+      TextField textField, TextStyle textStyle) {
     final prefixWidth = _getPrefixTextSize(textField, textStyle).width;
     final suffixWidth = _getSuffixTextSize(textField, textStyle).width;
     final hintWidth = _getHintTextSize(textField, textStyle).width;
@@ -22,7 +23,7 @@ class TextFieldMeasurer {
     // field
     final cursorWidth = textField.cursorWidth + 1;
 
-    return TextFieldMeasurer._(
+    return FittedTextFieldMeasurer._(
       textField: textField,
       textStyle: textStyle,
       hintWidth: hintWidth,

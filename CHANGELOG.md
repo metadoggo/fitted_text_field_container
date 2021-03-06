@@ -1,3 +1,10 @@
+## 1.3.1+1
+* Fixed README
+
+## 1.3.1
+* Updated README
+* Added width calculators for common use-cases
+
 ## 1.3.0
 * Added `calculator` property to allow custom width calculations 
 * **Breaking Change.** Removed `minWidth`, `maxWidth`, `prefixIconWidth`, `suffixIconWidth` properties (they can be replaced with the custom width calculator)

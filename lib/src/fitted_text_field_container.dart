@@ -1,10 +1,7 @@
-import 'dart:math';
-
+import 'package:fitted_text_field_container/src/calculator.dart';
 import 'package:flutter/material.dart';
 
-import 'utils.dart';
-
-typedef double CalculateFunction(TextFieldMeasurer measurer);
+import 'measurer.dart';
 
 class FittedTextFieldContainer extends StatefulWidget {
   /// Creates an animated container to wrap a [child] `TextField`  and
@@ -29,31 +26,24 @@ class FittedTextFieldContainer extends StatefulWidget {
   const FittedTextFieldContainer({
     Key key,
     @required this.child,
-    this.calculator,
     this.builder,
+    CalculateFunction calculator,
   })  : assert(child != null),
+        calculator = calculator ?? FittedTextFieldCalculator.fitVisible,
         super(key: key);
 
   @override
   _FittedTextFieldContainerState createState() =>
       _FittedTextFieldContainerState();
-
-  static CalculateFunction defaultCalculator = (m) =>
-      m.fixedWidths +
-      max(m.labelWidth,
-          m.textField.controller.text.isEmpty ? m.hintWidth : m.textWidth);
 }
 
 class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
-  CalculateFunction _calculator;
   double _textFieldWidth;
-  TextFieldMeasurer _measurer;
+  FittedTextFieldMeasurer _measurer;
 
   @override
   void initState() {
     assert(widget.child.controller != null);
-    _calculator =
-        widget.calculator ?? FittedTextFieldContainer.defaultCalculator;
     widget.child.controller.addListener(_onTextChanged);
     super.initState();
   }
@@ -64,8 +54,8 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
     final textStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
 
-    _measurer = TextFieldMeasurer.create(widget.child, textStyle);
-    _textFieldWidth = _calculator(_measurer);
+    _measurer = FittedTextFieldMeasurer.create(widget.child, textStyle);
+    _textFieldWidth = widget.calculator(_measurer);
 
     super.didChangeDependencies();
   }
@@ -77,7 +67,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   }
 
   void _onTextChanged() {
-    final width = _calculator(_measurer);
+    final width = widget.calculator(_measurer);
     if (width != _textFieldWidth) {
       setState(() {
         _textFieldWidth = width;
