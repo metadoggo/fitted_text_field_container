@@ -20,19 +20,18 @@ class FittedTextFieldContainer extends StatefulWidget {
   final TextField child;
 
   /// The calculator provides measured values that returns a width value
-  final CalculateFunction calculator;
+  final CalculateFunction? calculator;
 
   /// The builder provides the `child` TextField to a function that returns a
   /// widget.
-  final Widget Function(BuildContext context, TextField child) builder;
+  final Widget Function(BuildContext context, TextField child)? builder;
 
   const FittedTextFieldContainer({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.calculator,
     this.builder,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _FittedTextFieldContainerState createState() =>
@@ -41,20 +40,20 @@ class FittedTextFieldContainer extends StatefulWidget {
   static CalculateFunction defaultCalculator = (m) =>
       m.fixedWidths +
       max(m.labelWidth,
-          m.textField.controller.text.isEmpty ? m.hintWidth : m.textWidth);
+          m.textField.controller!.text.isEmpty ? m.hintWidth : m.textWidth);
 }
 
 class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
-  CalculateFunction _calculator;
-  double _textFieldWidth;
-  TextFieldMeasurer _measurer;
+  late CalculateFunction _calculator;
+  late double _textFieldWidth;
+  late TextFieldMeasurer _measurer;
 
   @override
   void initState() {
     assert(widget.child.controller != null);
     _calculator =
         widget.calculator ?? FittedTextFieldContainer.defaultCalculator;
-    widget.child.controller.addListener(_onTextChanged);
+    widget.child.controller!.addListener(_onTextChanged);
     super.initState();
   }
 
@@ -72,7 +71,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   @override
   void dispose() {
-    widget.child.controller.removeListener(_onTextChanged);
+    widget.child.controller!.removeListener(_onTextChanged);
     super.dispose();
   }
 
@@ -91,7 +90,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
       width: _textFieldWidth,
       child: widget.builder == null
           ? widget.child
-          : widget.builder(context, widget.child),
+          : widget.builder!(context, widget.child),
     );
   }
 }
