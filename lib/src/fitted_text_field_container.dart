@@ -21,15 +21,14 @@ class FittedTextFieldContainer extends StatefulWidget {
 
   /// The builder provides the `child` TextField to a function that returns a
   /// widget.
-  final Widget Function(BuildContext context, TextField child) builder;
+  final Widget Function(BuildContext context, TextField child)? builder;
 
   const FittedTextFieldContainer({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.builder,
-    CalculateFunction calculator,
-  })  : assert(child != null),
-        calculator = calculator ?? FittedTextFieldCalculator.fitVisible,
+    CalculateFunction? calculator,
+  })  : calculator = calculator ?? FittedTextFieldCalculator.fitVisible,
         super(key: key);
 
   @override
@@ -38,13 +37,13 @@ class FittedTextFieldContainer extends StatefulWidget {
 }
 
 class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
-  double _textFieldWidth;
-  FittedTextFieldMeasurer _measurer;
+  late double _textFieldWidth;
+  late FittedTextFieldMeasurer _measurer;
 
   @override
   void initState() {
     assert(widget.child.controller != null);
-    widget.child.controller.addListener(_onTextChanged);
+    widget.child.controller!.addListener(_onTextChanged);
     super.initState();
   }
 
@@ -52,7 +51,8 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
   void didChangeDependencies() {
     // When style is null, it defaults to `subtitle1` of current field.
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    final textStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
+    final textStyle =
+        widget.child.style ?? Theme.of(context).textTheme.subtitle1;
 
     _measurer = FittedTextFieldMeasurer.create(widget.child, textStyle);
     _textFieldWidth = widget.calculator(_measurer);
@@ -62,7 +62,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
 
   @override
   void dispose() {
-    widget.child.controller.removeListener(_onTextChanged);
+    widget.child.controller!.removeListener(_onTextChanged);
     super.dispose();
   }
 
@@ -81,7 +81,7 @@ class _FittedTextFieldContainerState extends State<FittedTextFieldContainer> {
       width: _textFieldWidth,
       child: widget.builder == null
           ? widget.child
-          : widget.builder(context, widget.child),
+          : widget.builder!(context, widget.child),
     );
   }
 }

@@ -325,7 +325,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 builder: (context, child) => Container(
                   child: Stack(
-                    overflow: Overflow.visible,
+                    clipBehavior: Clip.none,
                     children: <Widget>[
                       child,
                       Positioned(
@@ -348,7 +348,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Fit extends StatelessWidget {
-  final Widget child;
+  final TextField child;
   final CalculateFunction calculator;
 
   Fit({Key key, @required this.child, this.calculator}) : super(key: key);

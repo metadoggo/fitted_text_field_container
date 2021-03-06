@@ -33,19 +33,18 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
 
   /// The builder provides the `child` TextField to a function that returns a
   /// widget.
-  final Widget Function(BuildContext context, TextField child) builder;
+  final Widget Function(BuildContext context, TextField child)? builder;
 
   const AnimatedFittedTextFieldContainer({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.builder,
-    CalculateFunction calculator,
-    Duration growDuration,
-    Duration shrinkDuration,
-    Curve growCurve,
-    Curve shrinkCurve,
-  })  : assert(child != null),
-        calculator = calculator ?? FittedTextFieldCalculator.fitVisible,
+    CalculateFunction? calculator,
+    Duration? growDuration,
+    Duration? shrinkDuration,
+    Curve? growCurve,
+    Curve? shrinkCurve,
+  })  : calculator = calculator ?? FittedTextFieldCalculator.fitVisible,
         growDuration = growDuration ?? const Duration(milliseconds: 300),
         shrinkDuration = shrinkDuration ?? const Duration(milliseconds: 600),
         growCurve = growCurve ?? Curves.easeOutCirc,
@@ -59,16 +58,16 @@ class AnimatedFittedTextFieldContainer extends StatefulWidget {
 
 class _AnimatedFittedTextFieldContainerState
     extends State<AnimatedFittedTextFieldContainer> {
-  double _textFieldWidth;
-  FittedTextFieldMeasurer _measurer;
-  Duration _duration;
-  Curve _curve;
+  double? _textFieldWidth;
+  late FittedTextFieldMeasurer _measurer;
+  late Duration _duration;
+  late Curve _curve;
   bool _didGrow = true;
 
   @override
   void initState() {
     assert(widget.child.controller != null);
-    widget.child.controller.addListener(_onTextChanged);
+    widget.child.controller!.addListener(_onTextChanged);
     _duration = widget.growDuration;
     _curve = widget.growCurve;
     super.initState();
@@ -78,7 +77,8 @@ class _AnimatedFittedTextFieldContainerState
   void didChangeDependencies() {
     // When style is null, it defaults to `subtitle1` of current field.
     // See: https://api.flutter.dev/flutter/material/TextField/style.html
-    final textStyle = widget.child.style ?? Theme.of(context).textTheme.subhead;
+    final textStyle =
+        widget.child.style ?? Theme.of(context).textTheme.subtitle1;
 
     _measurer = FittedTextFieldMeasurer.create(widget.child, textStyle);
     _textFieldWidth = widget.calculator(_measurer);
@@ -88,7 +88,7 @@ class _AnimatedFittedTextFieldContainerState
 
   @override
   void dispose() {
-    widget.child.controller.removeListener(_onTextChanged);
+    widget.child.controller!.removeListener(_onTextChanged);
     super.dispose();
   }
 
@@ -96,7 +96,7 @@ class _AnimatedFittedTextFieldContainerState
     final width = widget.calculator(_measurer);
     if (width != _textFieldWidth) {
       setState(() {
-        if (width > _textFieldWidth) {
+        if (width > _textFieldWidth!) {
           if (!_didGrow) {
             _duration = widget.growDuration;
             _curve = widget.growCurve;
@@ -121,7 +121,7 @@ class _AnimatedFittedTextFieldContainerState
       width: _textFieldWidth,
       child: widget.builder == null
           ? widget.child
-          : widget.builder(context, widget.child),
+          : widget.builder!(context, widget.child),
     );
   }
 }

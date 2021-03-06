@@ -1,5 +1,6 @@
 name: example
 description: An example app that uses fitted_text_field_container.
+publish_to: none
 
 version: 1.0.0+1
 

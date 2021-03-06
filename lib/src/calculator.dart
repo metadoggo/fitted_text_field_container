@@ -17,7 +17,7 @@ class FittedTextFieldCalculator {
   static double fitVisible(FittedTextFieldMeasurer m) =>
       m.fixedWidths +
       max<double>(m.labelWidth,
-          m.textField.controller.text.isEmpty ? m.hintWidth : m.textWidth);
+          m.textField.controller!.text.isEmpty ? m.hintWidth : m.textWidth);
 
   /// fitVisibleWithPadding in addition to fitting visible content it adds a
   /// fixed padding value
@@ -26,17 +26,17 @@ class FittedTextFieldCalculator {
           padding +
           m.fixedWidths +
           max<double>(m.labelWidth,
-              m.textField.controller.text.isEmpty ? m.hintWidth : m.textWidth);
+              m.textField.controller!.text.isEmpty ? m.hintWidth : m.textWidth);
 
   /// fitVisibleWithRange in addition to fitting visible content it enforces
   /// a minimum and (optional) maximum width
   static CalculateFunction fitVisibleWithRange(double minWidth,
-          [double maxWidth]) =>
-      (FittedTextFieldMeasurer m) {
-        final width = m.fixedWidths +
+          [double? maxWidth]) =>
+      (FittedTextFieldMeasurer? m) {
+        final width = m!.fixedWidths +
             max<double>(
                 m.labelWidth,
-                m.textField.controller.text.isEmpty
+                m.textField.controller!.text.isEmpty
                     ? m.hintWidth
                     : m.textWidth);
         if (width < minWidth) {

@@ -1,3 +1,6 @@
+## 2.0.0
+* Null safety - thanks to [AliAmmar](https://github.com/Ali1Ammar)
+
 ## 1.3.1+1
 * Fixed README
 
